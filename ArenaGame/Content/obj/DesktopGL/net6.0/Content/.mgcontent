@@ -4,9 +4,11 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>/home/arek/.dotfiles/school/d7049e/D7049E-game-engine/ArenaGame/Content/ball.png</File>
+    <File>C:/Users/alexe/Documents/school/D7049E/D7049E-game-engine/ArenaGame/Content/ball.png</File>
+    <File>C:/Users/alexe/Documents/school/D7049E/D7049E-game-engine/ArenaGame/Content/Font.spritefont</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>
 </SourceFileCollection>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>/home/arek/.dotfiles/school/d7049e/D7049E-game-engine/ArenaGame/Content/ball.png</SourceFile>
-  <SourceTime>2023-03-31T12:21:57.6135718+02:00</SourceTime>
-  <DestFile>/home/arek/.dotfiles/school/d7049e/D7049E-game-engine/ArenaGame/Content/bin/ball.xnb</DestFile>
-  <DestTime>2023-03-31T12:24:56.8231086+02:00</DestTime>
+  <SourceFile>C:/Users/alexe/Documents/school/D7049E/D7049E-game-engine/ArenaGame/Content/ball.png</SourceFile>
+  <SourceTime>2023-03-31T15:30:46.8958859+02:00</SourceTime>
+  <DestFile>C:/Users/alexe/Documents/school/D7049E/D7049E-game-engine/ArenaGame/Content/bin/ball.xnb</DestFile>
+  <DestTime>2023-03-31T17:16:08.5545625+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T13:44:56+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
