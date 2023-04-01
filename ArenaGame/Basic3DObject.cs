@@ -10,9 +10,8 @@ class Basic3DObject
 {
     public class Obj3D
     {
-
         public int start_index; // Where it is in index buffer
-        public int traingle_count;
+        public int triangle_count;
         public Rectangle source_rect;  // Section within texture to sample from
         public Texture2D tex;
         public Vector3 rot; // Optional rotation
@@ -31,6 +30,21 @@ class Basic3DObject
             }
         }
 
+        protected void Init(Vector3 Pos, string file){
+            start_index = ibuf_start;
+            pos = Pos;
+            transform = Matrix.CreateTranslation(pos);
+            tex = LoadTexture(file);
+            if ((source_rect.Width < 1) || (source_rect.Height < 1)) source_rect = new Rectangle(0, 0, tex.Width, tex.Height);
+        }
+
+        protected void GetUVCoords(ref float u1, ref float v1, ref float u2, ref float v2){
+            u1 = source_rect.X / (float)tex.Width;
+            v1 = source_rect.Y / (float)tex.Height;
+            u2 = (source_rect.X + source_rect.Width) / (float)tex.Width;
+            v2 = (source_rect.Y + source_rect.Height) / (float)tex.Height;
+        }
+
         public void UpdateTransformQuaternion()
         {
             if (rot == Vector3.Zero)
@@ -42,6 +56,75 @@ class Basic3DObject
                 Quaternion q = Quaternion.CreateFromYawPitchRoll(rot.Y, rot.X, rot.Z);
                 transform = Matrix.CreateFromQuaternion(q) * Matrix.CreateTranslation(pos);
             }
+        }
+
+        public void AddQuad(Vector3 Pos, float width, float height, Vector3 rotation, string textureFile, Rectangle? sourceRect){
+            if(sourceRect.HasValue) source_rect = sourceRect.Value;
+            Init(pos, textureFile);
+            rot = rotation;
+            UpdateTransform();
+
+            float u1 = 0, v1 = 0, u2 = 1, v2 = 1, hw = width / 2, hl = height / 2;
+            GetUVCoords(ref u1, ref v1, ref u2, ref v2);
+            Vector3 norm = Vector3.Up;
+            float y = pos.Y, l = -hw + Pos.X, r = hw + Pos.X, n = -hl + Pos.Z, f = hl + Pos.Z; // Y-coord, Left, Right, Near, Far
+            AddVertex(l, y, f, norm, u1, v1); // 0
+            AddVertex(r, y, f, norm, u2, v1); // 1
+            AddVertex(r, y, n, norm, u2, v2); // 2
+            AddVertex(l, y, n, norm, u1, v2); // 3
+            AddTriangle(0, 1, 2); triangle_count++;
+            AddTriangle(2,3,0); triangle_count++;
+
+            vertexBuffer.SetData<VertexPositionNormalTexture>(vbuf_start*vbytes, vertices, 0, v_cnt, vbytes);
+            vbuf_start = v_cnt; v_cnt = 0;
+            indexBuffer.SetData<ushort>(ibuf_start*ibytes, indices, 0, i_cnt);
+            ibuf_start = i_cnt; i_cnt = 0;
+        }
+
+        public void AddCube(Vector3 Pos, Vector3 size, Vector3 rotation, string textureFile, Rectangle? sourceRect){
+            if(sourceRect.HasValue) source_rect = sourceRect.Value;
+            Init(pos, textureFile); rot = rotation; UpdateTransform();
+            float u1 = 0, v1 = 0, u2 = 1, v2 = 1, hw = size.X / 2, hl = size.Y / 2, hh = size.Z / 2; // Uv's , half-width, half-length, half-height
+            GetUVCoords(ref u1, ref v1, ref u2, ref v2);
+            float t = Pos.Y - hh, b = Pos.Y + hh, l = -hw, r = Pos.X + hw, n = Pos.Z - hl, f = Pos.Z + hl; // Top, Bottom, Left, Right, Near, Far
+            
+            Vector3 norm = Vector3.Up;
+            AddVertex(l,t,f,norm,u1,v1); // 0
+            AddVertex(r,t,f,norm,u2,v1); // 1
+            AddVertex(r,t,n,norm,u2,v2); // 2
+            AddVertex(l,t,n,norm,u1,v2); // 3
+
+            norm = Vector3.Right;
+            AddVertex(r,b,f,norm,u1,v1); // 4
+            AddVertex(r,b,n,norm,u1,v2); // 5
+
+            norm = Vector3.Down;
+            AddVertex(l,b,f,norm,u2,v1); // 6
+            AddVertex(l,b,n,norm,u2,v2); // 7
+
+            norm = Vector3.Backward;
+            AddVertex(l,t,n,norm,u1,v1); // 8
+            AddVertex(r,t,n,norm,u2,v1); // 9
+            AddVertex(r,b,n,norm,u2,v2); // 10
+            AddVertex(l,b,n,norm,u1,v2); // 11
+            
+            norm = Vector3.Forward;
+            AddVertex(r,t,f,norm,u1,v1); // 12
+            AddVertex(l,t,f,norm,u2,v1); // 13
+            AddVertex(l,b,f,norm,u2,v2); // 14
+            AddVertex(r,b,f,norm,u1,v2); // 15
+
+            AddTriangle(0,1,2); triangle_count++; AddTriangle(2,3,0); triangle_count++; // Top - clockwise order
+            AddTriangle(2,1,4); triangle_count++; AddTriangle(4,5,2); triangle_count++;
+            AddTriangle(5,4,6); triangle_count++; AddTriangle(6,7,5); triangle_count++;
+            AddTriangle(7,6,0); triangle_count++; AddTriangle(0,3,7); triangle_count++;
+            AddTriangle(8,9,10); triangle_count++; AddTriangle(10,11,8); triangle_count++;
+            AddTriangle(12,13,14); triangle_count++; AddTriangle(14,15,12); triangle_count++;
+            
+            vertexBuffer.SetData<VertexPositionNormalTexture>(vbuf_start*vbytes, vertices, 0, v_cnt, vbytes);
+            vbuf_start = v_cnt; v_cnt = 0;
+            indexBuffer.SetData<ushort>(ibuf_start*ibytes, indices, 0, i_cnt);
+            ibuf_start = i_cnt; i_cnt = 0;
         }
     }
     
@@ -77,6 +160,13 @@ class Basic3DObject
         vertexBuffer = new VertexBuffer(gpu, typeof(VertexPositionNormalTexture), 65535, BufferUsage.WriteOnly);
         indexBuffer = new IndexBuffer(gpu, typeof(ushort), 65535, BufferUsage.WriteOnly);
         objects = new List<Obj3D>();
+
+        basic_effect.Alpha = 1f;
+        basic_effect.LightingEnabled = true;
+        basic_effect.AmbientLightColor = new Vector3(0.1f, 0.2f, 0.3f);
+        basic_effect.DiffuseColor = new Vector3(0.94f, 0.94f, 0.94f);
+        basic_effect.EnableDefaultLighting();
+        basic_effect.TextureEnabled = true;
     }
 
 
@@ -97,6 +187,7 @@ class Basic3DObject
         indices[i_cnt] = c; i_cnt++;
     }
 
+
     static Texture2D LoadTexture(string name){
         Texture2D texture;
         if(textures.TryGetValue(name, out texture)== true){
@@ -106,6 +197,37 @@ class Basic3DObject
             texture = Content.Load<Texture2D>(name);
             textures.Add(name, texture);
             return texture;
+        }
+    }
+
+    public void AddFloor(float width, float length, Vector3 mid_position, Vector3 rotation, String textureFile, Rectangle? sourceRect){
+        Obj3D obj = new Obj3D();
+        obj.AddQuad(mid_position, width, length, rotation, textureFile, sourceRect);
+        objects.Add(obj);
+    }
+
+    public void AddCube(float width, float length, float height, Vector3 mid_postion, Vector3 rotation, String textureFile, Rectangle? sourceRect){
+        Obj3D obj = new Obj3D();
+        obj.AddCube(mid_postion, new Vector3(width, height, length), rotation, textureFile, sourceRect);
+        objects.Add(obj);
+    }
+
+    public void Draw(Camera cam){
+        gpu.SetVertexBuffer(vertexBuffer);
+        gpu.Indices =indexBuffer;
+        int obj_cnt = objects.Count, o;
+        o = 0; while(o<obj_cnt){
+            Obj3D obj = objects[o];
+            // Shader param
+            basic_effect.Texture = obj.tex;
+            basic_effect.World = obj.transform;
+            basic_effect.View = cam.view;
+            basic_effect.Projection = cam.projection;
+            foreach(EffectPass pass in basic_effect.CurrentTechnique.Passes){
+                pass.Apply();
+                gpu.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, obj.start_index, obj.triangle_count);
+                o++;
+            }
         }
     }
 
