@@ -1,33 +1,29 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\alexe\\Documents\\school\\D7049E\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj": {}
+    "/home/arek/.dotfiles/school/d7049e/D7049E-game-engine/ArenaGame/ArenaGame.csproj": {}
   },
   "projects": {
-    "C:\\Users\\alexe\\Documents\\school\\D7049E\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj": {
+    "/home/arek/.dotfiles/school/d7049e/D7049E-game-engine/ArenaGame/ArenaGame.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\alexe\\Documents\\school\\D7049E\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj",
+        "projectUniqueName": "/home/arek/.dotfiles/school/d7049e/D7049E-game-engine/ArenaGame/ArenaGame.csproj",
         "projectName": "ArenaGame",
-        "projectPath": "C:\\Users\\alexe\\Documents\\school\\D7049E\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj",
-        "packagesPath": "C:\\Users\\alexe\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\alexe\\Documents\\school\\D7049E\\D7049E-game-engine\\ArenaGame\\obj\\",
+        "projectPath": "/home/arek/.dotfiles/school/d7049e/D7049E-game-engine/ArenaGame/ArenaGame.csproj",
+        "packagesPath": "/home/arek/.nuget/packages/",
+        "outputPath": "/home/arek/.dotfiles/school/d7049e/D7049E-game-engine/ArenaGame/obj/",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Users\\alexe\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder",
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "/home/arek/.local/share/godot/mono/GodotNuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\alexe\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Users\\alexe\\AppData\\Roaming\\NuGet\\config\\Godot.Offline.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/arek/.nuget/NuGet/NuGet.Config",
+          "/home/arek/.nuget/NuGet/config/Godot.Offline.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -61,8 +57,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -71,7 +66,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/6.0.115/RuntimeIdentifierGraph.json"
         }
       }
     }

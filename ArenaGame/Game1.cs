@@ -1,9 +1,13 @@
-﻿using ArenaGame.Ecs;
+﻿using System.Drawing;
+using System.Numerics;
+using ArenaGame.Ecs;
 using ArenaGame.Ecs.Components;
 using ArenaGame.Ecs.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Color = Microsoft.Xna.Framework.Color;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace ArenaGame;
 

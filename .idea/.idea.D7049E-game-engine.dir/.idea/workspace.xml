@@ -13,23 +13,33 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="rider-setup" />
+        <entry key="$PROJECT_DIR$" value="68c3b739aaf563f38c8a52fe0d74e413d77a1339" />
       </map>
     </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="2OEUU4M5Mc98pV7j5pF9n2DSTao" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "rider-setup",
+    "last_opened_file_path": "/home/arek/school/d7049e/D7049E-game-engine",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "/home/arek/.config/JetBrains/Rider2023.1/resharper-host/DecompilerCache",
+      "/home/arek/.config/JetBrains/Rider2023.1/resharper-host/SourcesCache",
+      "/home/arek/.local/share/Symbols/src"
+    ]
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="ArenaGame" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -60,6 +70,7 @@
       <updated>1681125249115</updated>
       <workItem from="1681125249884" duration="65000" />
       <workItem from="1681125317867" duration="87000" />
+      <workItem from="1681722237125" duration="67000" />
     </task>
     <servers />
   </component>
