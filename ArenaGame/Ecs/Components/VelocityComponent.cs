@@ -2,7 +2,7 @@
 
 namespace ArenaGame.Ecs.Components;
 
-public class VelocityComponent
+public class VelocityComponent: Component
 {
     
     public Vector2 Velocity { get; set; }
@@ -19,7 +19,7 @@ public class VelocityComponent
         set { Velocity = new Vector2(Velocity.X, value); }
     }
 
-    public VelocityComponent(float x, float y)
+    public VelocityComponent(float x = 0, float y = 0)
     {
         Velocity = new Vector2(x, y);
     }

@@ -24,7 +24,7 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-        _player = new Entity();
+        //_player = new Entity();
         _movementSystem = new MovementSystem();
     }
 
@@ -42,7 +42,7 @@ public class Game1 : Game
         input.Bindings.Add(Keys.D, new Vector2(1, 0)); // Move right
         _player.AddComponent(input);
         
-        _movementSystem.AddEntity(_player);
+        //_movementSystem.AddEntity(_player);
 
         base.Initialize();
     }
@@ -59,7 +59,7 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
-        _movementSystem.Update(gameTime);
+        //_movementSystem.Update(gameTime);
         
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))

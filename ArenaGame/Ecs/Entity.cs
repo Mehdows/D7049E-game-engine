@@ -1,28 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using ArenaGame.Ecs.Components;
 
 namespace ArenaGame.Ecs;
 
 public class Entity
 {
-    private Dictionary<Type, object> components = new Dictionary<Type, object>();
+    public int Id { get; }
+    private readonly EntityManager _entityManager;
     
-    public void AddComponent<T>(T component) where T : class 
+    public Entity(int id, EntityManager entityManager)
     {
-        components[typeof(T)] = component;
+        Id = id;
+        _entityManager = entityManager;
     }
-    
-    public T GetComponent<T>() where T : class 
+
+    public void AddComponent(Component component)
     {
-        if (components.TryGetValue(typeof(T), out object component)) 
-        {
-            return component as T;
-        }
-        return null;
+        _entityManager.AddComponent(this, component);
     }
-    
-    public bool HasComponent<T>() 
+
+    public void RemoveComponent<T>() where T : Component
     {
-        return components.ContainsKey(typeof(T));
-    } 
+        _entityManager.RemoveComponent<T>(this);
+    }
+
+    public T GetComponent<T>() where T : Component
+    {
+        return _entityManager.GetComponent<T>(this);
+    }
 }
