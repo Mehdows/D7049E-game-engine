@@ -2,7 +2,7 @@
 
 namespace ArenaGame.Ecs.Components;
 
-public class PositionComponent : Component
+public class PositionComponent : IComponent
 {
     public Vector2 Position { get; set; }
 
@@ -18,8 +18,13 @@ public class PositionComponent : Component
         set { Position = new Vector2(Position.X, value); }
     }
 
-    public PositionComponent(float x = 0, float y = 0)
+    public PositionComponent(float x, float y)
     {
         Position = new Vector2(x, y);
+    }
+
+    public PositionComponent()
+    {
+        Position = new Vector2(0, 0);
     }
 }

@@ -6,78 +6,39 @@ namespace ArenaGame.Ecs;
 
 using System.Collections.Generic;
 
-public class EntityManager
-{
-    private const int MAX_ENTITIES = 100;
-    private int nextEntityId = 1;
-    // List of all entities in the game
-    public List<Entity> Entities { get; private set; }
+public class EntityManager {
+    private static EntityManager instance = null;
+    private Dictionary<int, Entity> entities;
+    private int nextEntityId;
 
-    // Component array that stores all components in the game
-    public ComponentArray ComponentArray { get; private set; }
-
-    // List of archetypes for efficient component queries
-    public List<Archetype> Archetypes { get; private set; }
-
-    public EntityManager()
-    {
-        Entities = new List<Entity>();
-        ComponentArray = new ComponentArray();
-        Archetypes = new List<Archetype>();
+    private EntityManager() {
+        entities = new Dictionary<int, Entity>();
+        nextEntityId = 0;
     }
 
-    // Create a new entity and add it to the entity list
-    public Entity CreateEntity()
-    {
-        var entity = new Entity(nextEntityId++, this);
-        Entities.Add(entity);
-        if (nextEntityId > MAX_ENTITIES) {
-            nextEntityId = 1;
+    public static EntityManager Instance {
+        get {
+            if (instance == null) {
+                instance = new EntityManager();
+            }
+            return instance;
         }
+    }
+    
+    public Entity CreateEntity() {
+        int entityId = nextEntityId++;
+        Entity entity = new Entity(entityId);
+        entities.Add(entityId, entity);
         return entity;
     }
 
-    // Destroy an entity and remove it from the entity list
-    public void DestroyEntity(Entity entity)
-    {
-        if (Entities.Contains(entity))
-        Entities.Remove(entity);
-        ComponentArray.RemoveEntity(entity);
+    public void DestroyEntity(int entityId) {
+        entities.Remove(entityId);
     }
 
-    // Add a component to an entity
-    public void AddComponent(Entity entity, Component component)
-    {
-        ComponentArray.AddComponent(entity, component);
-        UpdateArchetypes(entity, component);
-    }
-
-    // Remove a component from an entity
-    public void RemoveComponent<T>(Entity entity) where T : Component
-    {
-        Type componentType = typeof(T);
-        Component component = ComponentArray.ComponentArrays[componentType][entity];
-        ComponentArray.RemoveComponent<T>(entity);
-        UpdateArchetypes(entity, component);
-    }
-
-    // Get a component from an entity
-    public T GetComponent<T>(Entity entity) where T : Component
-    {
-        return ComponentArray.GetComponent<T>(entity);
-    }
-    
-    public bool HasComponent<T>(Entity entity) where T : Component
-    {
-        return ComponentArray.HasComponent<T>(entity);
-    }
-
-    // Update the archetypes after adding or removing a component
-    private void UpdateArchetypes(Entity entity, Component component)
-    {
-        foreach (var archetype in Archetypes)
-        {
-            archetype.UpdateArchetype(entity, component);
-        }
+    public Entity GetEntity(int entityId) {
+        Entity entity;
+        entities.TryGetValue(entityId, out entity);
+        return entity;
     }
 }

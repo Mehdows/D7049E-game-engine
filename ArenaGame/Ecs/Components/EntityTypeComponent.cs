@@ -7,7 +7,7 @@ public enum EntityType
     NPC
 }
 
-public class EntityTypeComponent : Component
+public class EntityTypeComponent : IComponent
 {
     public EntityType type;
 }

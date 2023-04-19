@@ -31,6 +31,7 @@ public class Game1 : Game
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
+        /*
         _player.AddComponent(new EntityTypeComponent{ type = EntityType.Player});
         _player.AddComponent(new PositionComponent(x: 0, y: 0));
         _player.AddComponent(new VelocityComponent(x: 0, y: 0));
@@ -43,7 +44,7 @@ public class Game1 : Game
         _player.AddComponent(input);
         
         //_movementSystem.AddEntity(_player);
-
+*/
         base.Initialize();
     }
 
@@ -54,7 +55,8 @@ public class Game1 : Game
         // TODO: use this.Content to load your game content here
         Texture2D playerTexture = Content.Load<Texture2D>("player");
         SpriteComponent sprite = new SpriteComponent(playerTexture);
-        _player.AddComponent(sprite);
+        //_player.AddComponent(sprite);
+        
     }
 
     protected override void Update(GameTime gameTime)
@@ -76,7 +78,7 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
         
         _spriteBatch.Begin();
-        _spriteBatch.Draw(_player.GetComponent<SpriteComponent>().playerTexture, _player.GetComponent<PositionComponent>().Position, Color.White);
+        //_spriteBatch.Draw(_player.GetComponent<SpriteComponent>().playerTexture, _player.GetComponent<PositionComponent>().Position, Color.White);
         _spriteBatch.End();
 
         // TODO: Add your drawing code here

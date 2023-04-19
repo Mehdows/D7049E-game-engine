@@ -18,9 +18,10 @@ public class MovementSystem : System
     }*/
     
     public override void Update(EntityManager entityManager, GameTime gameTime) 
-    {
+    {/*
         foreach (Entity entity in entityManager.Entities) 
         {
+            /*
             if (entityManager.HasComponent<PositionComponent>(entity) &&
                 entityManager.HasComponent<VelocityComponent>(entity))
             {
@@ -49,6 +50,7 @@ public class MovementSystem : System
                     playerPosition.Y += (int)(playerVelocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
             }
-        }
+            
+        }*/
     } 
 }

@@ -5,73 +5,66 @@ using Components;
 using System;
 using System.Collections.Generic;
 
-public class ComponentArray
-{
-    public Dictionary<Type, Dictionary<Entity, Component>> ComponentArrays { get; }
+public class ComponentArray {
+    private IComponent[] components;
+    private int[] entityIds;
+    private Type componentType;
 
-    
-    public ComponentArray()
-    {
-        ComponentArrays = new Dictionary<Type, Dictionary<Entity, Component>>();
+    public ComponentArray(Type componentType) {
+        components = Array.Empty<IComponent>();
+        entityIds = Array.Empty<int>();
+        this.componentType = componentType;
     }
 
-    public void AddComponent(Entity entity, Component component)
-    {
-        Type componentType = component.GetType();
+    public void AddComponent(int entityId, IComponent component) {
+        // Expand arrays
+        int index = components.Length;
+        Array.Resize(ref components, index + 1);
+        Array.Resize(ref entityIds, index + 1);
 
-        if (!ComponentArrays.ContainsKey(componentType))
-        {
-            ComponentArrays[componentType] = new Dictionary<Entity, Component>();
-        }
-
-        ComponentArrays[componentType][entity] = component;
+        // Add new component and entity ID
+        components[index] = component;
+        entityIds[index] = entityId;
     }
 
-    public void RemoveComponent<T>(Entity entity) where T : Component
-    {
-        Type componentType = typeof(T);
-
-        if (!ComponentArrays.ContainsKey(componentType) || !ComponentArrays[componentType].ContainsKey(entity))
-        {
-            return;
-        }
-
-        ComponentArrays[componentType].Remove(entity);
-    }
-
-    public T GetComponent<T>(Entity entity) where T : Component
-    {
-        var componentType = typeof(T);
-
-        if (!ComponentArrays.ContainsKey(componentType)) return null;
-        if (ComponentArrays[componentType].ContainsKey(entity))
-        {
-            return (T)ComponentArrays[componentType][entity];
-        }
-
-        return null;
-    }
-    
-
-    public bool HasComponent<T>(Entity entity) where T : Component
-    {
-        Type componentType = typeof(T);
-        if (!ComponentArrays.TryGetValue(componentType, out var componentArrayForType))
-        {
-            return false;
-        }
-
-        return componentArrayForType.ContainsKey(entity);
-    }
-    
-    public void RemoveEntity(Entity entity)
-    {
-        foreach (var componentType in ComponentArrays.Keys)
-        {
-            if (ComponentArrays[componentType].ContainsKey(entity))
-            {
-                ComponentArrays[componentType].Remove(entity);
+    public void RemoveComponent(int entityId) {
+        for (int i = 0; i < components.Length; i++) {
+            if (entityIds[i] == entityId) {
+                // Remove component and entity ID at index i
+                components[i] = null;
+                entityIds[i] = -1;
             }
         }
     }
+
+    public object GetComponent(int entityId) {
+        for (int i = 0; i < components.Length; i++) {
+            if (entityIds[i] == entityId) {
+                return components[i];
+            }
+        }
+        return null;
+    }
+    
+    public bool HasComponent(int entityId) {
+        for (int i = 0; i < entityIds.Length; i++) {
+            if (entityIds[i] == entityId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Type GetComponentType() {
+        return componentType;
+    }
+    
+
 }
+
+
+
+
+
+
+

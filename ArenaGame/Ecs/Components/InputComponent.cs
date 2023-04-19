@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace ArenaGame.Ecs.Components;
 
-public class InputComponent : Component
+public class InputComponent : IComponent
 {
     public Dictionary<Keys, Vector2> Bindings { get; set; }
 

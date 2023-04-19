@@ -3,7 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 namespace ArenaGame.Ecs.Components;
 
-public class SpriteComponent : Component {
+public class SpriteComponent : IComponent 
+{
     // public string spriteName;
     public Texture2D playerTexture;
 
