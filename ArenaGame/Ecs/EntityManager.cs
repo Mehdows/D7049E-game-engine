@@ -49,14 +49,16 @@ public class EntityManager
     public void AddComponent(Entity entity, Component component)
     {
         ComponentArray.AddComponent(entity, component);
-        UpdateArchetypes(entity);
+        UpdateArchetypes(entity, component);
     }
 
     // Remove a component from an entity
-    public void RemoveComponent<T>(Entity entity)
+    public void RemoveComponent<T>(Entity entity) where T : Component
     {
-        ComponentArray.RemoveComponent(entity);
-        UpdateArchetypes(entity);
+        Type componentType = typeof(T);
+        Component component = ComponentArray.ComponentArrays[componentType][entity];
+        ComponentArray.RemoveComponent<T>(entity);
+        UpdateArchetypes(entity, component);
     }
 
     // Get a component from an entity
@@ -71,11 +73,11 @@ public class EntityManager
     }
 
     // Update the archetypes after adding or removing a component
-    private void UpdateArchetypes(Entity entity)
+    private void UpdateArchetypes(Entity entity, Component component)
     {
         foreach (var archetype in Archetypes)
         {
-            archetype.UpdateArchetype(entity, ComponentArray);
+            archetype.UpdateArchetype(entity, component);
         }
     }
 }

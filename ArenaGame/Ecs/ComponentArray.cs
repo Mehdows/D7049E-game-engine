@@ -9,6 +9,7 @@ public class ComponentArray
 {
     public Dictionary<Type, Dictionary<Entity, Component>> ComponentArrays { get; }
 
+    
     public ComponentArray()
     {
         ComponentArrays = new Dictionary<Type, Dictionary<Entity, Component>>();
@@ -26,12 +27,16 @@ public class ComponentArray
         ComponentArrays[componentType][entity] = component;
     }
 
-    public void RemoveComponent(Entity entity)
+    public void RemoveComponent<T>(Entity entity) where T : Component
     {
-        foreach (var componentType in ComponentArrays.Keys.Where(componentType => ComponentArrays[componentType].ContainsKey(entity)))
+        Type componentType = typeof(T);
+
+        if (!ComponentArrays.ContainsKey(componentType) || !ComponentArrays[componentType].ContainsKey(entity))
         {
-            ComponentArrays[componentType].Remove(entity);
+            return;
         }
+
+        ComponentArrays[componentType].Remove(entity);
     }
 
     public T GetComponent<T>(Entity entity) where T : Component
@@ -61,9 +66,12 @@ public class ComponentArray
     
     public void RemoveEntity(Entity entity)
     {
-        foreach (var componentType in ComponentArrays.Keys.Where(componentType => ComponentArrays[componentType].ContainsKey(entity)))
+        foreach (var componentType in ComponentArrays.Keys)
         {
-            ComponentArrays[componentType].Remove(entity);
+            if (ComponentArrays[componentType].ContainsKey(entity))
+            {
+                ComponentArrays[componentType].Remove(entity);
+            }
         }
     }
 }

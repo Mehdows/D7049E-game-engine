@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Reflection;
 using ArenaGame.Ecs.Components;
 
 namespace ArenaGame.Ecs;
@@ -7,25 +8,42 @@ using System.Collections.Generic;
 
 public class Archetype
 {
-    public List<Entity> Entities { get; private set; }
-    private Dictionary<Type, Dictionary<Entity, Component>> componentArrays;
+    private ComponentArray ComponentArray { get; }
+    private readonly Type[] _componentTypes;
 
-    public Archetype(ComponentArray componentArray)
+    public Archetype(ComponentArray componentArray, params Type[] componentTypes)
     {
-        Entities = new List<Entity>();
-        componentArrays = new Dictionary<Type, Dictionary<Entity, Component>>();
+        ComponentArray = componentArray;
+        _componentTypes = componentTypes;
+    }
 
-        foreach (Type type in componentArray.ComponentArrays.Keys)
+    public void AddEntity(Entity entity, params Component[] components)
+    {
+        if (!components.Equals(_componentTypes)) return;
+        foreach (var component in components)
         {
-            componentArrays.Add(type, new Dictionary<Entity, Component>());
+            ComponentArray.AddComponent(entity, component);
         }
     }
 
-    public bool Matches(ComponentArray componentArray)
+    public void RemoveEntity(Entity entity)
     {
-        foreach (Type type in componentArrays.Keys)
+        ComponentArray.RemoveEntity(entity);
+    }
+
+    public bool HasEntity(Entity entity)
+    {
+        if (_componentTypes.Length < 1) return false;
+        foreach (var componentType in _componentTypes)
         {
-            if (!componentArray.ComponentArrays.ContainsKey(type))
+            try
+            {
+                if (!ComponentArray.ComponentArrays[componentType].ContainsKey(entity))
+                {
+                    return false;
+                }
+            }
+            catch (KeyNotFoundException e)
             {
                 return false;
             }
@@ -33,57 +51,74 @@ public class Archetype
         return true;
     }
 
-    public void Add(Entity entity, ComponentArray componentArray)
+    public bool HasComponents(params Type[] componentTypes)
     {
-        Entities.Add(entity);
-
-        foreach (Type type in componentArrays.Keys)
+        foreach (var componentType in componentTypes)
         {
-            Dictionary<Entity, Component> componentArrayForType = componentArrays[type];
-            if (componentArray.HasComponent<Component>(entity))
+            if (!ComponentArray.ComponentArrays.ContainsKey(componentType))
             {
-                Component component = componentArray.GetComponent<Component>(entity);
-                componentArrayForType.Add(entity, component);
+                return false;
             }
         }
+
+        return true;
     }
 
-    public void UpdateArchetype(Entity entity, ComponentArray componentArray)
+    public IEnumerable<Entity> GetEntities()
     {
-        // Check if the entity still matches this archetype
-        if (!Matches(componentArray))
+        // Find the entities that have all the specified components
+        IEnumerable<Entity> entities = null;
+        foreach (var componentType in _componentTypes)
         {
-            Entities.Remove(entity);
-            foreach (Type type in componentArrays.Keys)
+            if (!ComponentArray.ComponentArrays.ContainsKey(componentType))
             {
-                Dictionary<Entity, Component> componentArrayForType = componentArrays[type];
-                if (componentArrayForType.ContainsKey(entity))
-                {
-                    componentArrayForType.Remove(entity);
-                }
+                return Enumerable.Empty<Entity>();
             }
+
+            if (entities == null)
+            {
+                entities = ComponentArray.ComponentArrays[componentType].Keys;
+            }
+            else
+            {
+                entities = entities.Intersect(ComponentArray.ComponentArrays[componentType].Keys);
+            }
+        }
+
+        // Filter out entities that don't have all the specified components
+        if (entities != null)
+        {
+            entities = entities.Where(entity =>
+                _componentTypes.All(componentType => ComponentArray.ComponentArrays[componentType].ContainsKey(entity)));
+        }
+
+        return entities ?? Enumerable.Empty<Entity>();
+    }
+
+    public IEnumerable<Entity> GetEntitiesWithComponents(params Type[] componentTypes)
+    {
+        var entities = GetEntities();
+
+        foreach (var componentType in componentTypes)
+        {
+            entities = entities.Where(entity => ComponentArray.ComponentArrays[componentType].ContainsKey(entity));
+        }
+
+        return entities;
+    }
+
+    public void UpdateArchetype(Entity entity, Component component)
+    {
+        var componentType = component.GetType();
+        var entityHasComponent = _componentTypes.Contains(componentType) && 
+                                 ComponentArray.ComponentArrays.ContainsKey(componentType) &&
+                                 ComponentArray.ComponentArrays[componentType].ContainsKey(entity);
+
+        if (!entityHasComponent)
+        {
             return;
         }
 
-        // Add any new components for this entity
-        foreach (Type type in componentArrays.Keys)
-        {
-            Dictionary<Entity, Component> componentArrayForType = componentArrays[type];
-            if (!componentArrayForType.ContainsKey(entity) && componentArray.HasComponent<Component>(entity))
-            {
-                Component component = componentArray.GetComponent<Component>(entity);
-                componentArrayForType.Add(entity, component);
-            }
-        }
-
-        // Remove any components that were removed from this entity
-        foreach (Type type in componentArrays.Keys)
-        {
-            Dictionary<Entity, Component> componentArrayForType = componentArrays[type];
-            if (componentArrayForType.ContainsKey(entity) && !componentArray.HasComponent<Component>(entity))
-            {
-                componentArrayForType.Remove(entity);
-            }
-        }
+        ComponentArray.AddComponent(entity, component);
     }
 }
