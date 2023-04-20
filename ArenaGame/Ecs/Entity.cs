@@ -14,12 +14,26 @@ public class Entity
         Id = id;
     }
 
-    public void AddComponent<T>() where T: IComponent, new()
+    public void AddComponent<T>(IComponent component = null) where T: IComponent, new()
+    {
+        var newComponent = component ?? new T();
+        Type componentType = typeof(T);
+        ComponentManager.Instance.GetComponentArray(componentType)
+            .AddComponent(Id, newComponent);
+    }
+        
+    public void RemoveComponent<T>() where T: IComponent
     {
         Type componentType = typeof(T);
         ComponentManager.Instance.GetComponentArray(componentType)
-            .AddComponent(Id, new T());
-        
+            .RemoveComponent(Id);
+    }
+    
+    public IComponent GetComponent<T>() where T: IComponent
+    {
+        Type componentType = typeof(T);
+        return ComponentManager.Instance.GetComponentArray(componentType)
+            .GetComponent(Id);
     }
     
 }

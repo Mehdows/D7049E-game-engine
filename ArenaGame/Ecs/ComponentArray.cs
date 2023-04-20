@@ -37,7 +37,7 @@ public class ComponentArray {
         }
     }
 
-    public object GetComponent(int entityId) {
+    public IComponent GetComponent(int entityId) {
         for (int i = 0; i < components.Length; i++) {
             if (entityIds[i] == entityId) {
                 return components[i];

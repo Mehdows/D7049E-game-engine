@@ -15,41 +15,37 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Entity _player;
-    private MovementSystem _movementSystem;
-    private float playerSpeed = 100f;
+    private EntityManager entityManager;
+    private ComponentManager componentManager;
 
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-        //_player = new Entity();
-        _movementSystem = new MovementSystem();
+        
+        // Create entity and component managers
+        entityManager = EntityManager.Instance;
+        componentManager = ComponentManager.Instance;
+        // Register component types
+        componentManager.RegisterComponent(typeof(SpriteComponent));
+        componentManager.RegisterComponent(typeof(PositionComponent));
+        componentManager.RegisterComponent(typeof(InputComponent));
     }
 
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
-        /*
-        _player.AddComponent(new EntityTypeComponent{ type = EntityType.Player});
-        _player.AddComponent(new PositionComponent(x: 0, y: 0));
-        _player.AddComponent(new VelocityComponent(x: 0, y: 0));
-        
-        InputComponent input = new InputComponent();
-        input.Bindings.Add(Keys.W, new Vector2(0, -1)); // Move up
-        input.Bindings.Add(Keys.A, new Vector2(-1, 0)); // Move left
-        input.Bindings.Add(Keys.S, new Vector2(0, 1)); // Move down
-        input.Bindings.Add(Keys.D, new Vector2(1, 0)); // Move right
-        _player.AddComponent(input);
-        
-        //_movementSystem.AddEntity(_player);
-*/
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
+        // Create entities
+        var entity1 = entityManager.CreateEntity();
+        var entity2 = entityManager.CreateEntity();
+        
+        
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // TODO: use this.Content to load your game content here

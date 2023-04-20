@@ -29,4 +29,9 @@ public class ComponentManager {
         }
         return (ComponentArray)componentArrays[componentType];
     }
+
+    public void Reset()
+    {
+        componentArrays.Clear();
+    }
 }
