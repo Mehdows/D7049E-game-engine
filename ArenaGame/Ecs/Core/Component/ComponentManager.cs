@@ -27,7 +27,16 @@ public class ComponentManager {
         if (!componentArrays.ContainsKey(componentType)) {
             RegisterComponent(componentType);
         }
-        return (ComponentArray)componentArrays[componentType];
+
+        return componentArrays[componentType];
+    }
+    
+    public void DestroyEntity(int entityId)
+    {
+        foreach (ComponentArray componentArray in componentArrays.Values)
+        {
+            componentArray.RemoveComponent(entityId);
+        }
     }
 
     public void Reset()

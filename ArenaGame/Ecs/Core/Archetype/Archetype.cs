@@ -4,14 +4,14 @@ using ArenaGame.Ecs.Components;
 namespace ArenaGame.Ecs;
 
 public class Archetype {
-    private readonly Type[] componentTypes;
+    public Type[] ComponentTypes { get; }
 
     public Archetype(Type[] componentTypes) {
-        this.componentTypes = componentTypes;
+        this.ComponentTypes = componentTypes;
     }
 
     public bool Matches(int entityId) {
-        foreach (Type componentType in componentTypes) {
+        foreach (Type componentType in ComponentTypes) {
             ComponentArray componentArray = ComponentManager.Instance.GetComponentArray(componentType);
             if (!componentArray.HasComponent(entityId)) {
                 return false;
@@ -22,7 +22,7 @@ public class Archetype {
 
     public ComponentArray GetComponentArray(Type componentType) {
         // Return the ComponentArray of the specified ComponentType, if present
-        foreach (Type type in componentTypes) {
+        foreach (Type type in ComponentTypes) {
             if (type == componentType) {
                 return ComponentManager.Instance.GetComponentArray(componentType);
             }
@@ -31,4 +31,5 @@ public class Archetype {
         // If the specified ComponentType is not present in this Archetype, return null
         return null;
     }
+    
 }

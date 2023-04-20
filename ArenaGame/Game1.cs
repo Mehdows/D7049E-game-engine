@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Numerics;
 using ArenaGame.Ecs;
+using ArenaGame.Ecs.Archetypes;
 using ArenaGame.Ecs.Components;
 using ArenaGame.Ecs.Systems;
 using Microsoft.Xna.Framework;
@@ -13,58 +14,49 @@ namespace ArenaGame;
 
 public class Game1 : Game
 {
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
+    private GraphicsDeviceManager graphics;
+    private SpriteBatch spriteBatch;
     private EntityManager entityManager;
     private ComponentManager componentManager;
+    private Entity player;
 
     public Game1()
     {
-        _graphics = new GraphicsDeviceManager(this);
+        graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
         
         // Create entity and component managers
         entityManager = EntityManager.Instance;
         componentManager = ComponentManager.Instance;
-        // Register component types
-        componentManager.RegisterComponent(typeof(SpriteComponent));
-        componentManager.RegisterComponent(typeof(PositionComponent));
-        componentManager.RegisterComponent(typeof(InputComponent));
+        
     }
 
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
+        PlayerArchetype playerArchetype = ArchetypeFactory.GetArchetype(EArchetype.Player) as PlayerArchetype;
+        player = entityManager.CreateEntityWithArchetype(playerArchetype);
+        
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
-        // Create entities
-        var entity1 = entityManager.CreateEntity();
-        var entity2 = entityManager.CreateEntity();
-        
-        
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-        // TODO: use this.Content to load your game content here
         Texture2D playerTexture = Content.Load<Texture2D>("player");
-        SpriteComponent sprite = new SpriteComponent(playerTexture);
-        //_player.AddComponent(sprite);
+        player.AddComponent<SpriteComponent>(new SpriteComponent(playerTexture));
         
+        spriteBatch = new SpriteBatch(GraphicsDevice);
     }
 
     protected override void Update(GameTime gameTime)
     {
-        //_movementSystem.Update(gameTime);
         
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-
-        // TODO: Add your update logic here
-        //_playerGetComponent<InputComponent>().Update(Keyboard.GetState());
+        MovementSystem movementSystem = new MovementSystem();
+        movementSystem.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -73,9 +65,11 @@ public class Game1 : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
         
-        _spriteBatch.Begin();
-        //_spriteBatch.Draw(_player.GetComponent<SpriteComponent>().playerTexture, _player.GetComponent<PositionComponent>().Position, Color.White);
-        _spriteBatch.End();
+        spriteBatch.Begin();
+        spriteBatch.Draw(
+            ((SpriteComponent)player.GetComponent<SpriteComponent>()).Texture,
+            ((PositionComponent)player.GetComponent<PositionComponent>()).Position, Color.White);
+        spriteBatch.End();
 
         // TODO: Add your drawing code here
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using ArenaGame.Ecs.Components;
 
 namespace ArenaGame.Ecs;
@@ -31,9 +32,23 @@ public class EntityManager {
         entities.Add(entityId, entity);
         return entity;
     }
+    
+    public Entity CreateEntityWithArchetype(Archetype archetype) {
+        Entity entity = CreateEntity();
+        foreach (Type componentType in archetype.ComponentTypes)
+        {
+            // Get the AddComponent<T>() method via reflection
+            MethodInfo addComponentMethod = typeof(Entity).GetMethod("AddComponent").MakeGenericMethod(componentType);
+
+            // Invoke the method on the entity with the new component instance as an argument
+            addComponentMethod.Invoke(entity, new object[] { Activator.CreateInstance(componentType) });
+        }
+        return entity;
+    }
 
     public void DestroyEntity(int entityId) {
         entities.Remove(entityId);
+        ComponentManager.Instance.DestroyEntity(entityId);
     }
 
     public bool HasEntity(int entityId)
@@ -45,6 +60,9 @@ public class EntityManager {
         Entity entity;
         entities.TryGetValue(entityId, out entity);
         return entity;
+    }
+    public  List<Entity> GetEntities() {
+        return entities.Values.ToList();
     }
     
     public List<Entity> GetEntitiesWithArchetype(Archetype archetype) {

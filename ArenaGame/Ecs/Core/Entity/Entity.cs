@@ -36,4 +36,11 @@ public class Entity
             .GetComponent(Id);
     }
     
+    public bool HasComponent<T>() where T: IComponent
+    {
+        Type componentType = typeof(T);
+        return ComponentManager.Instance.GetComponentArray(componentType)
+            .HasComponent(Id);
+    }
+    
 }

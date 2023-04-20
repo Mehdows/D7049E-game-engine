@@ -4,10 +4,8 @@ using Microsoft.Xna.Framework;
 
 namespace ArenaGame.Ecs.Systems;
 
-public abstract class System
+public interface ISystem
 {
-
-
-    public abstract void Update(EntityManager entityManager, GameTime gameTime);
+    public  void Update(GameTime gameTime);
 
 }
