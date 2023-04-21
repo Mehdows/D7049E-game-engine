@@ -23,43 +23,7 @@ public class MovementSystem : ISystem
         // TODO: Check entites that have archetype that has position and velocity components
         foreach (Entity entity in EntityManager.Instance.GetEntities()) 
         {
-            if (entity.HasComponent<PositionComponent>() &&
-                entity.HasComponent<VelocityComponent>())
-            {
-                if (entity.HasComponent<InputComponent>())
-                {
-                    InputComponent input = (InputComponent)entity.GetComponent<InputComponent>();
-
-                    // Get the current position and velocity of the entity
-                    PositionComponent position = (PositionComponent)entity.GetComponent<PositionComponent>();
-                    VelocityComponent velocity = (VelocityComponent)entity.GetComponent<VelocityComponent>();
-
-                    // Calculate the new position based on the velocity
-                    Vector2 newPosition = position.Position + velocity.Velocity;
-
-                    // Adjust the position based on input
-                    if (input.IsKeyDown(InputKey.Up))
-                    {
-                        newPosition.Y -= 1;
-                    }
-                    else if (input.IsKeyDown(InputKey.Down))
-                    {
-                        newPosition.Y += 1;
-                    }
-                    if (input.IsKeyDown(InputKey.Left))
-                    {
-                        newPosition.X -= 1;
-                    }
-                    else if (input.IsKeyDown(InputKey.Right))
-                    {
-                        newPosition.X += 1;
-                    }
-
-                    // Update the position component with the new position
-                    position.Position = newPosition; 
-                }
                 
-            }
         }
     }
 }

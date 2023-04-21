@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using System.Numerics;
-using ArenaGame.Ecs;
+﻿using ArenaGame.Ecs;
 using ArenaGame.Ecs.Archetypes;
 using ArenaGame.Ecs.Components;
 using ArenaGame.Ecs.Systems;
@@ -8,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Color = Microsoft.Xna.Framework.Color;
-using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace ArenaGame;
 
@@ -18,11 +15,16 @@ public class Game1 : Game
     private SpriteBatch spriteBatch;
     private EntityManager entityManager;
     private ComponentManager componentManager;
-    private Entity player;
+    private Entity player; 
+    private PlayerControllerSystem playerControllerSystem;
 
     public Game1()
     {
         graphics = new GraphicsDeviceManager(this);
+        graphics.PreferredBackBufferWidth = 1920;  
+        graphics.PreferredBackBufferHeight = 1080; 
+        graphics.ApplyChanges();
+        
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
         
@@ -30,6 +32,7 @@ public class Game1 : Game
         entityManager = EntityManager.Instance;
         componentManager = ComponentManager.Instance;
         
+
     }
 
     protected override void Initialize()
@@ -37,6 +40,7 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
         PlayerArchetype playerArchetype = ArchetypeFactory.GetArchetype(EArchetype.Player) as PlayerArchetype;
         player = entityManager.CreateEntityWithArchetype(playerArchetype);
+        playerControllerSystem = new PlayerControllerSystem();
         
         base.Initialize();
     }
@@ -55,8 +59,8 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-        MovementSystem movementSystem = new MovementSystem();
-        movementSystem.Update(gameTime);
+       
+        playerControllerSystem.Update(gameTime);
 
         base.Update(gameTime);
     }

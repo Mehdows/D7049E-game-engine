@@ -30,7 +30,8 @@ public class ArchetypeFactory
                 return new PlayerArchetype(new[]
                 {
                     ComponentManager.Instance.GetComponentArray(typeof(PositionComponent)).GetComponentType(),
-                    ComponentManager.Instance.GetComponentArray(typeof(VelocityComponent)).GetComponentType()
+                    ComponentManager.Instance.GetComponentArray(typeof(VelocityComponent)).GetComponentType(),
+                    ComponentManager.Instance.GetComponentArray(typeof(InputComponent)).GetComponentType()
                 });
         
             case EArchetype.Enemy:
