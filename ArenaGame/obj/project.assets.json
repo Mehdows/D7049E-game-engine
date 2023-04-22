@@ -102,29 +102,32 @@
     ]
   },
   "packageFolders": {
-    "/home/arek/.nuget/packages/": {},
-    "/home/arek/.local/share/godot/mono/GodotNuGetFallbackFolder": {}
+    "C:\\Users\\Andreas\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/arek/.dotfiles/school/d7049e/D7049E-game-engine/ArenaGame/ArenaGame.csproj",
+      "projectUniqueName": "C:\\Users\\Andreas\\source\\repos\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj",
       "projectName": "ArenaGame",
-      "projectPath": "/home/arek/.dotfiles/school/d7049e/D7049E-game-engine/ArenaGame/ArenaGame.csproj",
-      "packagesPath": "/home/arek/.nuget/packages/",
-      "outputPath": "/home/arek/.dotfiles/school/d7049e/D7049E-game-engine/ArenaGame/obj/",
+      "projectPath": "C:\\Users\\Andreas\\source\\repos\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj",
+      "packagesPath": "C:\\Users\\Andreas\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Andreas\\source\\repos\\D7049E-game-engine\\ArenaGame\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "/home/arek/.local/share/godot/mono/GodotNuGetFallbackFolder"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "/home/arek/.nuget/NuGet/NuGet.Config",
-        "/home/arek/.nuget/NuGet/config/Godot.Offline.Config"
+        "C:\\Users\\Andreas\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -158,7 +161,8 @@
           "net47",
           "net471",
           "net472",
-          "net48"
+          "net48",
+          "net481"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -167,7 +171,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/6.0.115/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
       }
     }
   }

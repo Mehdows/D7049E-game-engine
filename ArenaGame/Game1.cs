@@ -1,11 +1,15 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Numerics;
+using System.Collections.Generic;
 using ArenaGame.Ecs;
 using ArenaGame.Ecs.Components;
 using ArenaGame.Ecs.Systems;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using Color = Microsoft.Xna.Framework.Color;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
@@ -13,12 +17,14 @@ namespace ArenaGame;
 
 public class Game1 : Game
 {
+    private AudioSystem _audioSystem;
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Entity _player;
     private MovementSystem _movementSystem;
     private float playerSpeed = 100f;
 
+    private List<SoundEffect> _soundEffects;
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -26,6 +32,8 @@ public class Game1 : Game
         IsMouseVisible = true;
         _player = new Entity();
         _movementSystem = new MovementSystem();
+        _audioSystem = new AudioSystem();
+        _soundEffects = new List<SoundEffect>();
     }
 
     protected override void Initialize()
@@ -34,6 +42,10 @@ public class Game1 : Game
         _player.AddComponent(new EntityTypeComponent{ type = EntityType.Player});
         _player.AddComponent(new PositionComponent(x: 0, y: 0));
         _player.AddComponent(new VelocityComponent(x: 0, y: 0));
+
+        // Putting the AudioComponent on the player because we do not yet have a cameraEntity
+        _player.AddComponent(new AudioComponent(Content.Load<Song>("stranger-things"), true ));
+
         
         InputComponent input = new InputComponent();
         input.Bindings.Add(Keys.W, new Vector2(0, -1)); // Move up
@@ -43,6 +55,7 @@ public class Game1 : Game
         _player.AddComponent(input);
         
         _movementSystem.AddEntity(_player);
+        _audioSystem.AddEntity(_player);
 
         base.Initialize();
     }
@@ -60,6 +73,7 @@ public class Game1 : Game
     protected override void Update(GameTime gameTime)
     {
         _movementSystem.Update(gameTime);
+        _audioSystem.Update(gameTime);
         
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))

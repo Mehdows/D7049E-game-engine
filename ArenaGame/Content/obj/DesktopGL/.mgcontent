@@ -4,9 +4,15 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>/home/arek/.dotfiles/school/d7049e/D7049E-game-engine/ArenaGame/Content/player.png</File>
+    <File>C:/Users/Andreas/source/repos/D7049E-game-engine/ArenaGame/Content/Audio/footsteps.wav</File>
+    <File>C:/Users/Andreas/source/repos/D7049E-game-engine/ArenaGame/Content/Audio/sand_step.wav</File>
+    <File>C:/Users/Andreas/source/repos/D7049E-game-engine/ArenaGame/Content/Audio/stranger-things.mp3</File>
+    <File>C:/Users/Andreas/source/repos/D7049E-game-engine/ArenaGame/Content/player.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>
 </SourceFileCollection>
