@@ -18,10 +18,10 @@ Start menu -> Player spawns in scene -> Enemies spawn and attack in waves -> Gam
 
 ### Benchmark titles
 #### Vampire Survivors
-![Vampire-survivors](vampire-survivors.jpg)
+![Vampire-survivors](./img/vampire-survivors.jpg)
 
 #### CoD: Black Ops - Dead Ops Arcade
-![cod-zombies-arcade](dead-ops-arcade.jpg)
+![cod-zombies-arcade](./img/dead-ops-arcade.jpg)
 
 ## Development environment
 Language: C#
