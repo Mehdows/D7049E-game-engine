@@ -59,6 +59,11 @@ public class ComponentArray {
         return componentType;
     }
     
+    // TODO Zip the two arrays into a list of tuples for (EntityId, Component)
+    public List<(int, IComponent)> GetEntityComponents() {
+        return components.Select((component, index) => (entityIds[index], component)).ToList();
+    }
+    
 
 }
 
