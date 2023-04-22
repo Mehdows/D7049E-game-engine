@@ -1,23 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 
 namespace ArenaGame.Ecs.Components;
 
 public class TransformComponent : IComponent
 {
-    public Vector3 Position { get; set; }
-    public Quaternion Rotation { get; set; }
-    public Vector3 Scale { get; set; }
+    public Vector3 Position { get; set; } = Vector3.Zero;
+    public Quaternion Rotation { get; set; } = Quaternion.Identity;
+    public Vector3 Scale { get; set; } = Vector3.One;
 
 
     public Vector3 Forward => Vector3.Transform(Vector3.Forward, Rotation);
     public Vector3 Up => Vector3.Transform(Vector3.Up, Rotation);
-
-    public TransformComponent(Vector3 position, Quaternion rotation, Vector3 scale)
-    {
-        Position = position;
-        Rotation = rotation;
-        Scale = scale;
-    }
 
     public void LookAt(Vector3 target)
     {

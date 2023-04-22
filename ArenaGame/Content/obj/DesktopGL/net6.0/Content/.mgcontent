@@ -4,9 +4,17 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/alexe/Documents/school/D7049E/D7049E-game-engine/ArenaGame/Content/player.png</File>
+    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/FreeMale.fbx</File>
+    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/FreeMale/free_male_1_body_diffuse.psd</File>
+    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/FreeMale/free_male_1_head_diffuse.psd</File>
+    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/MonoCube.fbx</File>
+    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/player.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>
 </SourceFileCollection>

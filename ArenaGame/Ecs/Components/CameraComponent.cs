@@ -9,7 +9,7 @@ public class CameraComponent : IComponent
     public Matrix ProjectionMatrix { get; private set; }
 
     public TransformComponent Transform { get; set; }
-    public float FieldOfView { get; set; } = MathHelper.PiOver4;
+    public float FieldOfView { get; set; } = MathHelper.ToRadians(45f);
     public float AspectRatio { get; set; } = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.AspectRatio;
     public float NearClipPlane { get; set; } = 0.1f;
     public float FarClipPlane { get; set; } = 1000f;
@@ -17,6 +17,7 @@ public class CameraComponent : IComponent
     public CameraComponent(TransformComponent transform)
     {
         Transform = transform;
+        UpdateProjectionMatrix();
     }
 
     public void LookAt(Vector3 target)

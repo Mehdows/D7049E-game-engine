@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>/home/arek/.dotfiles/school/d7049e/D7049E-game-engine/ArenaGame/Content/player.png</SourceFile>
-  <SourceTime>2023-04-17T11:00:08.455998+02:00</SourceTime>
-  <DestFile>/home/arek/.dotfiles/school/d7049e/D7049E-game-engine/ArenaGame/Content/bin/DesktopGL/player.xnb</DestFile>
-  <DestTime>2023-04-17T11:07:31.3371803+02:00</DestTime>
+  <SourceFile>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/player.png</SourceFile>
+  <SourceTime>2023-04-17T14:03:27.4287437+02:00</SourceTime>
+  <DestFile>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/bin/DesktopGL/player.xnb</DestFile>
+  <DestTime>2023-04-21T15:44:25.4928613+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T13:44:56+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
