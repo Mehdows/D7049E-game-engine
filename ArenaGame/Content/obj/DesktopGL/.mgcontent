@@ -4,15 +4,15 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/footsteps.wav</File>
-    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/FreeMale/free_male_1_body_diffuse.psd</File>
-    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/FreeMale/free_male_1_head_diffuse.psd</File>
-    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/FreeMale/free_male_1.FBX</File>
-    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/MonoCube/MonoCube.fbx</File>
-    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/MonoCube/MonoCubeTexture.png</File>
-    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/player.png</File>
-    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/sand_step.wav</File>
-    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/stranger-things.mp3</File>
+    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/Audio/footsteps.wav</File>
+    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/Audio/sand_step.wav</File>
+    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/Audio/stranger-things.mp3</File>
+    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/Models/FreeMale/free_male_1_body_diffuse.psd</File>
+    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/Models/FreeMale/free_male_1_head_diffuse.psd</File>
+    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/Models/FreeMale/free_male_1.FBX</File>
+    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/Models/MonoCube/MonoCube.fbx</File>
+    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/Models/MonoCube/MonoCubeTexture.png</File>
+    <File>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/Sprites/player.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

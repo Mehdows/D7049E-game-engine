@@ -73,11 +73,11 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         // 2D
-        Texture2D playerTexture = Content.Load<Texture2D>("player");
+        Texture2D playerTexture = Content.Load<Texture2D>("Sprites/player");
         player.AddComponent<SpriteComponent>(new SpriteComponent(playerTexture));
 
         // 3D
-        Model model = Content.Load<Model>("FreeMale");
+        Model model = Content.Load<Model>("Models/FreeMale/free_male_1");
         player3D.AddComponent<MeshComponent>(new MeshComponent(model));
     }
 
