@@ -455,3 +455,9 @@ monodroid*.msi
 /CompiledContent/Windows/IgnoreMe.dll
 *.cachefile
 *.dll
+
+# From ChatGPT
+Content/bin/
+Content/obj/
+packages/
+bin/
