@@ -1,10 +1,10 @@
 ﻿using ArenaGame.Ecs.Archetypes;
 using ArenaGame.Ecs.Components;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace ArenaGame.Ecs.Systems;
 
+// For 2D, see InputSystem for 3D
 public class PlayerControllerSystem: ISystem
 {
     private int speed = 10;

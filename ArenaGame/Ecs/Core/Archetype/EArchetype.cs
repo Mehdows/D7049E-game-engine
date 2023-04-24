@@ -9,4 +9,5 @@ public enum EArchetype {
     Light = 5,  // PositionComponent, LightComponent, RotationComponent
     Particle = 6, //
     Trigger = 7,
+    Player3D = 8 // TransformComponent, InputComponent
 } 
