@@ -8,4 +8,8 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = ArenaGame
+<<<<<<< HEAD
+build_property.ProjectDir = C:\Users\Andreas\source\repos\D7049E-game-engine\ArenaGame\
+=======
 build_property.ProjectDir = C:\Users\alexe\Documents\school\D7049E\D7049E-game-engine\ArenaGame\
+>>>>>>> ec63336c26e918e738f127b6c6dd23fa3a29493c

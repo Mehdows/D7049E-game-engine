@@ -4,6 +4,14 @@
   <SourceTime>2023-04-17T14:03:27.4287437+02:00</SourceTime>
   <DestFile>C:/Users/jonat/OneDrive/Dokument/LTU/År 4/D7049E/D7049E-game-engine/ArenaGame/Content/bin/DesktopGL/Content/player.xnb</DestFile>
   <DestTime>2023-04-21T09:30:14.8079811+02:00</DestTime>
+  <SourceFile>C:/Users/Andreas/source/repos/D7049E-game-engine/ArenaGame/Content/player.png</SourceFile>
+  <SourceTime>2023-04-18T11:29:24.9214416+02:00</SourceTime>
+  <DestFile>C:/Users/Andreas/source/repos/D7049E-game-engine/ArenaGame/Content/bin/DesktopGL/Content/player.xnb</DestFile>
+  <DestTime>2023-04-20T15:09:00.0858282+02:00</DestTime>
+  <SourceFile>C:/Users/alexe/Documents/school/D7049E/D7049E-game-engine/ArenaGame/Content/player.png</SourceFile>
+  <SourceTime>2023-04-17T20:03:41.4553082+02:00</SourceTime>
+  <DestFile>C:/Users/alexe/Documents/school/D7049E/D7049E-game-engine/ArenaGame/Content/bin/DesktopGL/Content/player.xnb</DestFile>
+  <DestTime>2023-04-17T20:52:06.803037+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T13:44:56+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

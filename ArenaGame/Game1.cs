@@ -4,8 +4,10 @@ using ArenaGame.Ecs.Archetypes;
 using ArenaGame.Ecs.Components;
 using ArenaGame.Ecs.Systems;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace ArenaGame;
@@ -15,6 +17,8 @@ public class Game1 : Game
     private GraphicsDeviceManager graphics;
     private EntityManager entityManager;
     private ComponentManager componentManager;
+    
+    private List<SoundEffect> _soundEffects;
 
     // 2D
     private SpriteBatch spriteBatch;

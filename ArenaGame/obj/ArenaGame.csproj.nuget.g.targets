@@ -1,10 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+<<<<<<< HEAD
+    <Import Project="$(NuGetPackageRoot)monogame.framework.desktopgl\3.8.1.303\build\MonoGame.Framework.DesktopGL.targets" Condition="Exists('$(NuGetPackageRoot)monogame.framework.desktopgl\3.8.1.303\build\MonoGame.Framework.DesktopGL.targets')" />
+    <Import Project="$(NuGetPackageRoot)monogame.content.builder.task\3.8.1.303\build\MonoGame.Content.Builder.Task.targets" Condition="Exists('$(NuGetPackageRoot)monogame.content.builder.task\3.8.1.303\build\MonoGame.Content.Builder.Task.targets')" />
+=======
     <Import Project="$(NuGetPackageRoot)netstandard.library\2.0.0\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('$(NuGetPackageRoot)netstandard.library\2.0.0\build\netstandard2.0\NETStandard.Library.targets')" />
     <Import Project="$(NuGetPackageRoot)monogame.framework.desktopgl\3.8.1.303\build\MonoGame.Framework.DesktopGL.targets" Condition="Exists('$(NuGetPackageRoot)monogame.framework.desktopgl\3.8.1.303\build\MonoGame.Framework.DesktopGL.targets')" />
     <Import Project="$(NuGetPackageRoot)monogame.content.builder.task\3.8.1.303\build\MonoGame.Content.Builder.Task.targets" Condition="Exists('$(NuGetPackageRoot)monogame.content.builder.task\3.8.1.303\build\MonoGame.Content.Builder.Task.targets')" />
     <Import Project="$(NuGetPackageRoot)microsoft.codecoverage\17.5.0\build\netstandard2.0\Microsoft.CodeCoverage.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.codecoverage\17.5.0\build\netstandard2.0\Microsoft.CodeCoverage.targets')" />
     <Import Project="$(NuGetPackageRoot)microsoft.net.test.sdk\17.5.0\build\netcoreapp3.1\Microsoft.NET.Test.Sdk.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.net.test.sdk\17.5.0\build\netcoreapp3.1\Microsoft.NET.Test.Sdk.targets')" />
+>>>>>>> ec63336c26e918e738f127b6c6dd23fa3a29493c
   </ImportGroup>
 </Project>
