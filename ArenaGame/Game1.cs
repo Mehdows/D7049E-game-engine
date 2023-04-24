@@ -77,7 +77,7 @@ public class Game1 : Game
         player.AddComponent<SpriteComponent>(new SpriteComponent(playerTexture));
 
         // 3D
-        Model model = Content.Load<Model>("Models/FreeMale/free_male_1");
+        Model model = Content.Load<Model>("Models/FreeMale");
         player3D.AddComponent<MeshComponent>(new MeshComponent(model));
     }
 
