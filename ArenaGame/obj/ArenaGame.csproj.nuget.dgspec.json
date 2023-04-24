@@ -1,46 +1,20 @@
 {
   "format": 1,
   "restore": {
-<<<<<<< HEAD
-    "C:\\Users\\Andreas\\source\\repos\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj": {}
+    "C:\\Users\\jonat\\OneDrive\\Dokument\\LTU\\År 4\\D7049E\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Andreas\\source\\repos\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj": {
+    "C:\\Users\\jonat\\OneDrive\\Dokument\\LTU\\År 4\\D7049E\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Andreas\\source\\repos\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj",
+        "projectUniqueName": "C:\\Users\\jonat\\OneDrive\\Dokument\\LTU\\År 4\\D7049E\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj",
         "projectName": "ArenaGame",
-        "projectPath": "C:\\Users\\Andreas\\source\\repos\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj",
-        "packagesPath": "C:\\Users\\Andreas\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Andreas\\source\\repos\\D7049E-game-engine\\ArenaGame\\obj\\",
+        "projectPath": "C:\\Users\\jonat\\OneDrive\\Dokument\\LTU\\År 4\\D7049E\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj",
+        "packagesPath": "C:\\Users\\jonat\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jonat\\OneDrive\\Dokument\\LTU\\År 4\\D7049E\\D7049E-game-engine\\ArenaGame\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Andreas\\AppData\\Roaming\\NuGet\\NuGet.Config",
-=======
-    "C:\\Users\\alexe\\Documents\\school\\D7049E\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj": {}
-  },
-  "projects": {
-    "C:\\Users\\alexe\\Documents\\school\\D7049E\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\alexe\\Documents\\school\\D7049E\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj",
-        "projectName": "ArenaGame",
-        "projectPath": "C:\\Users\\alexe\\Documents\\school\\D7049E\\D7049E-game-engine\\ArenaGame\\ArenaGame.csproj",
-        "packagesPath": "C:\\Users\\alexe\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\alexe\\Documents\\school\\D7049E\\D7049E-game-engine\\ArenaGame\\obj\\",
-        "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Users\\alexe\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder",
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
-        "configFilePaths": [
-          "C:\\Users\\alexe\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Users\\alexe\\AppData\\Roaming\\NuGet\\config\\Godot.Offline.Config",
->>>>>>> ec63336c26e918e738f127b6c6dd23fa3a29493c
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\jonat\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -48,10 +22,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-<<<<<<< HEAD
-          "C:\\Program Files\\dotnet\\library-packs": {},
-=======
->>>>>>> ec63336c26e918e738f127b6c6dd23fa3a29493c
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -103,11 +73,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
->>>>>>> ec63336c26e918e738f127b6c6dd23fa3a29493c
         }
       }
     }

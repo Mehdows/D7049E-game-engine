@@ -5,27 +5,28 @@ using Microsoft.Xna.Framework;
 
 namespace ArenaGame.Ecs.Systems;
 
-public class AudioSystem : System
+public class AudioSystem : ISystem
 {
 
 
-    public override void AddEntity(Entity entity)
+    public void AddEntity(Entity entity)
     {
-        if (entity.HasComponent<AudioComponent>()) 
+        /*if (entity.HasComponent<AudioComponent>()) 
         { 
             entities.Add(entity);
-        }
+        }*/
     }
 
 
-    public override void Update(GameTime gameTime)
+    public void Update(GameTime gameTime)
     {
+        /*
         foreach (Entity entity in entities)
         {
 
             var audio = entity.GetComponent<AudioComponent>();
 
-            /*
+            
             if (audio.ShouldPlaySoundEffect)
             {
                 audio.PlaySoundEffect();
@@ -36,9 +37,9 @@ public class AudioSystem : System
                 audio.StopSoundEffect();
             }
 
-            */
+            
 
-            if (audio.ShouldPlaySong)
+        if (audio.ShouldPlaySong)
             { 
                 audio.PlaySong();
             }
@@ -48,6 +49,7 @@ public class AudioSystem : System
             }
 
         }
+        */
     }
 }
 
