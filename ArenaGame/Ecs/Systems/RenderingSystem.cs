@@ -1,8 +1,8 @@
-﻿using ArenaGame.Ecs.Archetypes;
-using ArenaGame.Ecs.Components;
-using Microsoft.Xna.Framework;
+﻿using ArenaGame.Ecs.Components;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Matrix = BEPUutilities.Matrix;
 
 namespace ArenaGame.Ecs.Systems;
 
@@ -55,16 +55,16 @@ public class RenderingSystem : ISystem
 
     private void DrawModel(Model model, Matrix worldMatrix)
     {
-        Matrix viewMatrix = ActiveCamera.ViewMatrix;
+        Matrix viewMatrix =  ActiveCamera.ViewMatrix;
         Matrix projectionMatrix = ActiveCamera.ProjectionMatrix;
 
         foreach (ModelMesh mesh in model.Meshes)
         {
             foreach (BasicEffect effect in mesh.Effects)
             {
-                effect.World = worldMatrix;
-                effect.View = viewMatrix;
-                effect.Projection = projectionMatrix;
+                effect.World = MathConverter.Convert(worldMatrix);
+                effect.View = MathConverter.Convert(viewMatrix);
+                effect.Projection = MathConverter.Convert(projectionMatrix);
                 effect.EnableDefaultLighting();
             }
 

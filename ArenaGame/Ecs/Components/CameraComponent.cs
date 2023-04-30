@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using BEPUutilities;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace ArenaGame.Ecs.Components;
@@ -7,6 +7,8 @@ public class CameraComponent : IComponent
 {
     public Matrix ViewMatrix { get; private set; }
     public Matrix ProjectionMatrix { get; private set; }
+    
+    public Matrix WorldMatrix { get; private set; }
 
     public TransformComponent Transform { get; set; }
     public float FieldOfView { get; set; } = MathHelper.ToRadians(45f);
@@ -28,11 +30,19 @@ public class CameraComponent : IComponent
 
     private void UpdateViewMatrix()
     {
-        ViewMatrix = Matrix.CreateLookAt(Transform.Position, Transform.Position + Transform.Forward, Transform.Up);
+        
+        
+        ViewMatrix = Matrix.CreateLookAtRH(Transform.Position, Transform.Position + Transform.Forward, Transform.Up);
     }
 
     public void UpdateProjectionMatrix()
     {
-        ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, NearClipPlane, FarClipPlane);
+        ProjectionMatrix = Matrix.CreatePerspectiveFieldOfViewRH(FieldOfView, AspectRatio, NearClipPlane, FarClipPlane);
+    }
+    
+    public void UpdateWorldMatrix()
+    {
+        // Top down world matrix
+        WorldMatrix = Matrix.CreateFromAxisAngle(Vector3.Right, MathHelper.ToRadians(90f)) * Matrix.CreateTranslation(Transform.Position);
     }
 }

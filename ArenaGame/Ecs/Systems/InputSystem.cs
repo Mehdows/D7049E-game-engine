@@ -1,6 +1,9 @@
 ﻿using ArenaGame.Ecs.Archetypes;
 using ArenaGame.Ecs.Components;
 using Microsoft.Xna.Framework;
+using MathHelper = BEPUutilities.MathHelper;
+using Quaternion = BEPUutilities.Quaternion;
+using Vector3 = BEPUutilities.Vector3;
 
 namespace ArenaGame.Ecs.Systems;
 
