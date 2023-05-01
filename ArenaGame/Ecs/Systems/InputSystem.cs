@@ -12,8 +12,8 @@ public class InputSystem: ISystem
 {
     public void Update(GameTime gameTime)
     {
-        Player3DArchetype player3DArchetype = (Player3DArchetype)ArchetypeFactory.GetArchetype(EArchetype.Player3D);
-        Entity player3D = EntityManager.Instance.GetEntitiesWithArchetype(player3DArchetype)[0];
+        PlayerArchetype playerArchetype = (PlayerArchetype)ArchetypeFactory.GetArchetype(EArchetype.Player);
+        Entity player3D = EntityManager.Instance.GetEntitiesWithArchetype(playerArchetype)[0];
         TransformComponent transform = (TransformComponent)player3D.GetComponent<TransformComponent>();
         InputComponent input = (InputComponent)player3D.GetComponent<InputComponent>();
 

@@ -1,8 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿
+using ArenaGame.Ecs.Components;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using BEPUphysics.Entities;
+using Matrix = BEPUutilities.Matrix;
 
-namespace ArenaGame;
+namespace ArenaGame.Ecs;
 
 /// <summary>
 /// Component that draws a model following the position and orientation of a BEPUphysics entity.
@@ -12,12 +14,12 @@ public class EntityModel : DrawableGameComponent
     /// <summary>
     /// Entity that this model follows.
     /// </summary>
-    Entity entity;
+    BEPUphysics.Entities.Entity entity;
     Model model;
     /// <summary>
     /// Base transformation to apply to the model.
     /// </summary>
-    public BEPUutilities.Matrix Transform;
+    public Matrix Transform;
     Matrix[] boneTransforms;
 
 
@@ -28,7 +30,7 @@ public class EntityModel : DrawableGameComponent
     /// <param name="model">Graphical representation to use for the entity.</param>
     /// <param name="transform">Base transformation to apply to the model before moving to the entity.</param>
     /// <param name="game">Game to which this component will belong.</param>
-    public EntityModel(Entity entity, Model model, BEPUutilities.Matrix transform, Game game)
+    public EntityModel(BEPUphysics.Entities.Entity entity, Model model, Matrix transform, Game game)
         : base(game)
     {
         this.entity = entity;
@@ -49,22 +51,21 @@ public class EntityModel : DrawableGameComponent
 
     public override void Draw(GameTime gameTime)
     {
-        //Notice that the entity's worldTransform property is being accessed here.
-        //This property is returns a rigid transformation representing the orientation
-        //and translation of the entity combined.
-        //There are a variety of properties available in the entity, try looking around
-        //in the list to familiarize yourself with it.
-        Matrix worldMatrix = MathConverter.Convert(Transform * entity.WorldTransform);
+        
+        PerspectiveCameraComponent cameraComponent =
+            (PerspectiveCameraComponent)ComponentManager.Instance.GetComponentArray(typeof(PerspectiveCameraComponent)).GetEntityComponents()[0].Item2;
+        Matrix worldMatrix = Transform * entity.WorldTransform;
 
 
-        model.CopyAbsoluteBoneTransformsTo(boneTransforms);
+        Microsoft.Xna.Framework.Matrix[] convertedBoneTransforms = new Microsoft.Xna.Framework.Matrix[model.Bones.Count];
+        model.CopyAbsoluteBoneTransformsTo(convertedBoneTransforms);
         foreach (ModelMesh mesh in model.Meshes)
         {
             foreach (BasicEffect effect in mesh.Effects)
             {
-                effect.World = boneTransforms[mesh.ParentBone.Index] * worldMatrix;
-                effect.View = MathConverter.Convert((Game as Game1).cameraComponent.ViewMatrix);
-                effect.Projection = MathConverter.Convert((Game as Game1).cameraComponent.ProjectionMatrix);
+                effect.World = convertedBoneTransforms[mesh.ParentBone.Index] * MathConverter.Convert(worldMatrix);
+                effect.View = MathConverter.Convert(cameraComponent.ViewMatrix);
+                effect.Projection = MathConverter.Convert(cameraComponent.ProjectionMatrix);
             }
             mesh.Draw();
         }

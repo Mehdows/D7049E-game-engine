@@ -16,7 +16,7 @@ public class ComponentArray {
         this.componentType = componentType;
     }
 
-    public void AddComponent(int entityId, IComponent component) {
+    public IComponent AddComponent(int entityId, IComponent component) {
         // Expand arrays
         int index = components.Length;
         Array.Resize(ref components, index + 1);
@@ -25,6 +25,7 @@ public class ComponentArray {
         // Add new component and entity ID
         components[index] = component;
         entityIds[index] = entityId;
+        return component;
     }
 
     public void RemoveComponent(int entityId) {

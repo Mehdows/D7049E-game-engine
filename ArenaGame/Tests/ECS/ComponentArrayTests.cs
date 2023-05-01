@@ -1,5 +1,6 @@
 ﻿using System;
 using ArenaGame.Ecs.Components;
+using Microsoft.Xna.Framework;
 using NUnit.Framework;
 
 namespace ArenaGame.Ecs.Tests;
@@ -13,7 +14,7 @@ public class ComponentArrayTests
     [SetUp]
     public void Setup()
     {
-        componentType = typeof(TestComponent);
+        componentType = typeof(TestGameComponent);
         componentArray = new ComponentArray(componentType);
     }
 
@@ -22,7 +23,7 @@ public class ComponentArrayTests
     {
         // Arrange
         int entityId = 1;
-        var component = new TestComponent();
+        var component = new TestGameComponent();
 
         // Act
         componentArray.AddComponent(entityId, component);
@@ -36,7 +37,7 @@ public class ComponentArrayTests
     {
         // Arrange
         int entityId = 1;
-        var component = new TestComponent();
+        var component = new TestGameComponent();
         componentArray.AddComponent(entityId, component);
 
         // Act
@@ -51,7 +52,7 @@ public class ComponentArrayTests
     {
         // Arrange
         int entityId = 1;
-        var component = new TestComponent();
+        var component = new TestGameComponent();
         componentArray.AddComponent(entityId, component);
 
         // Act
@@ -84,5 +85,21 @@ public class ComponentArrayTests
         Assert.AreEqual(componentType, returnedComponentType);
     }
 
-    private class TestComponent : IComponent {}
+    private class TestGameComponent : IComponent
+    {
+        public override void Initialize()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

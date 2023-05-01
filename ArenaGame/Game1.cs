@@ -9,7 +9,6 @@ using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.Entities.Prefabs;
 using BEPUphysics.NarrowPhaseSystems.Pairs;
 using BEPUutilities;
-using GettingStartedDemo;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,26 +20,27 @@ namespace ArenaGame;
 
 public class Game1 : Game
 {
+    private static Game1 instance;
+
+    public static Game1 Instance
+    {
+        get { return instance; }
+    }
+
     private GraphicsDeviceManager graphics;
     private EntityManager entityManager;
     private ComponentManager componentManager;
-    
     private List<SoundEffect> _soundEffects;
 
-    // 2D
-    private SpriteBatch spriteBatch;
-    private Entity player; 
-    
-    private PlayerControllerSystem playerControllerSystem;
-
     // 3D rendering
-    private Entity player3D;
-    public CameraComponent cameraComponent;
-    
-    private RenderingSystem renderingSystem;
+    private Entity player;
+    private Entity camera;
+    // private RenderingSystem renderingSystem;
+    private RenderingSystem2 renderingSystem;
     private InputSystem inputSystem;
+    private FollowCameraSystem followCameraSystem;
     private Model model;
-    
+
     // Physics
     public Model CubeModel;
     public Model PlaygroundModel;
@@ -50,66 +50,50 @@ public class Game1 : Game
     public Game1()
     {
         graphics = new GraphicsDeviceManager(this);
-        graphics.PreferredBackBufferWidth = 1920;  
-        graphics.PreferredBackBufferHeight = 1080; 
+        graphics.PreferredBackBufferWidth = 1920;
+        graphics.PreferredBackBufferHeight = 1080;
         graphics.ApplyChanges();
-        
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-        
+
         // Create entity and component managers
         entityManager = EntityManager.Instance;
         componentManager = ComponentManager.Instance;
-        
     }
 
     protected override void Initialize()
     {
-        // 2D
+        // 3D
         PlayerArchetype playerArchetype = ArchetypeFactory.GetArchetype(EArchetype.Player) as PlayerArchetype;
         player = entityManager.CreateEntityWithArchetype(playerArchetype);
-        playerControllerSystem = new PlayerControllerSystem();
 
-        // 3D
-        Player3DArchetype player3DArchetype = ArchetypeFactory.GetArchetype(EArchetype.Player3D) as Player3DArchetype;
-        player3D = entityManager.CreateEntityWithArchetype(player3DArchetype);
-
-        TransformComponent cameraTransform = new TransformComponent();
-        cameraTransform.Position = new Vector3(0f, 0f, -1000f);
-        cameraComponent = new CameraComponent(cameraTransform);
-        cameraComponent.LookAt(Vector3.Zero);
-        renderingSystem = new RenderingSystem(cameraComponent);
-
-        inputSystem = new InputSystem();
+        // Create a new camera and add the PerspectiveCameraComponent to it with a transform
+        camera = entityManager.CreateEntity();
+        TransformComponent cameraTransform = (TransformComponent) camera.AddComponent<TransformComponent>(new TransformComponent(new Vector3(0, 0, -150f))); 
+        ((PerspectiveCameraComponent)camera.AddComponent<PerspectiveCameraComponent>(new PerspectiveCameraComponent(cameraTransform))).LookAt(player);
         
-        // Physics
+        // renderingSystem = new RenderingSystem(camera);
+        renderingSystem = new RenderingSystem2();
+        inputSystem = new InputSystem();
+        // followCameraSystem = new FollowCameraSystem(player, camera);
 
+        // Physics
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
-        // 2D
-        Texture2D playerTexture = Content.Load<Texture2D>("Sprites/player");
-        player.AddComponent<SpriteComponent>(new SpriteComponent(playerTexture));
-        spriteBatch = new SpriteBatch(GraphicsDevice);
-
         // 3D
         Model playerModel = Content.Load<Model>("Models/FreeMale");
-        player3D.AddComponent<MeshComponent>(new MeshComponent(playerModel));
+        MeshComponent playerMesh =(MeshComponent) player.AddComponent<MeshComponent>(new MeshComponent(playerModel));
 
-        // Physics
         // Physics
         CubeModel = Content.Load<Model>("Models/cube");
-
         PlaygroundModel = Content.Load<Model>("Models/playground");
-        
         space = new Space();
-
         space.ForceUpdater.Gravity = new Vector3(0, -9.81f, 0);
-        Box ground = new Box(Vector3.Zero, 30, 1, 30);
+        Box ground = new Box(Vector3.Zero, 50, 1, 50);
         space.Add(ground);
-
 
         //Now that we have something to fall on, make a few more boxes.
         //These need to be dynamic, so give them a mass- in this case, 1 will be fine.
@@ -127,28 +111,29 @@ public class Game1 : Game
         ModelDataExtractor.GetVerticesAndIndicesFromModel(PlaygroundModel, out vertices, out indices);
         //Give the mesh information to a new StaticMesh.  
         //Give it a transformation which scoots it down below the kinematic box entity we created earlier.
-        var mesh = new StaticMesh(vertices, indices, new AffineTransform(new Vector3(0, -40, 0)));
+        var mesh = new StaticMesh(vertices, indices, new AffineTransform(new Vector3(0, 0, 0)));
 
         //Add it to the space!
         space.Add(mesh);
         // Make it visible too
-        Components.Add(new StaticModel(PlaygroundModel, mesh.WorldTransform.Matrix, this));
-        
+        Components.Add((IGameComponent)playerMesh);
+        Components.Add((IGameComponent)new StaticModelComponent(PlaygroundModel, mesh.WorldTransform.Matrix));
+
         //Hook an event handler to an entity to handle some game logic.
         //Refer to the Entity Events documentation for more information.
         Box deleterBox = new Box(new Vector3(5, 2, 0), 3, 3, 3);
         space.Add(deleterBox);
         deleterBox.CollisionInformation.Events.InitialCollisionDetected += HandleCollision;
-        
-        
+
         //Go through the list of entities in the space and create a graphical representation for them.
         foreach (BEPUphysics.Entities.Entity e in space.Entities)
         {
             Box box = e as Box;
             if (box != null) //This won't create any graphics for an entity that isn't a box since the model being used is a box.
             {
-                    
-                Matrix scaling = Matrix.CreateScale(box.Width, box.Height, box.Length); //Since the cube model is 1x1x1, it needs to be scaled to match the size of each individual box.
+                Matrix
+                    scaling = Matrix.CreateScale(box.Width, box.Height,
+                        box.Length); //Since the cube model is 1x1x1, it needs to be scaled to match the size of each individual box.
                 EntityModel model = new EntityModel(e, CubeModel, scaling, this);
                 //Add the drawable game component for this entity to the game.
                 Components.Add(model);
@@ -156,7 +141,7 @@ public class Game1 : Game
             }
         }
     }
-    
+
     /// <summary>
     /// Used to handle a collision event triggered by an entity specified above.
     /// </summary>
@@ -172,7 +157,7 @@ public class Game1 : Game
         if (otherEntityInformation != null)
         {
             //We hit an entity! remove it.
-            space.Remove(otherEntityInformation.Entity); 
+            space.Remove(otherEntityInformation.Entity);
             //Remove the graphics too.
             Components.Remove((EntityModel)otherEntityInformation.Entity.Tag);
         }
@@ -180,17 +165,20 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
+        PerspectiveCameraComponent cameraComponent =
+            (PerspectiveCameraComponent)camera.GetComponent<PerspectiveCameraComponent>();
+        renderingSystem.Update(gameTime);
+        if (followCameraSystem != null)
+        {
+            followCameraSystem.Update(gameTime);
+        }
         inputSystem.Update(gameTime);
         // Allows the game to exit
-        
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-            Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
-        cameraComponent.UpdateWorldMatrix();
-
+            Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
         KeyboardState KeyboardState = Keyboard.GetState();
         MouseState MouseState = Mouse.GetState();
-        if ( MouseState.LeftButton == ButtonState.Pressed)
+        if (MouseState.LeftButton == ButtonState.Pressed)
         {
             //If the user is clicking, start firing some boxes.
             //First, create a new dynamic box at the camera's location.
@@ -198,45 +186,26 @@ public class Game1 : Game
             //Set the velocity of the new box to fly in the direction the camera is pointing.
             //Entities have a whole bunch of properties that can be read from and written to.
             //Try looking around in the entity's available properties to get an idea of what is available.
-            toAdd.LinearVelocity = cameraComponent.WorldMatrix.Forward * 10;
+            toAdd.LinearVelocity = cameraComponent.Transform.Forward * 10;
             //Add the new box to the simulation.
             space.Add(toAdd);
 
             //Add a graphical representation of the box to the drawable game components.
             EntityModel model = new EntityModel(toAdd, CubeModel, Matrix.Identity, this);
             Components.Add(model);
-            toAdd.Tag = model;  //set the object tag of this entity to the model so that it's easy to delete the graphics component later if the entity is removed.
+            toAdd.Tag = model; //set the object tag of this entity to the model so that it's easy to delete the graphics component later if the entity is removed.
         }
-        
+
         // Update the Space object in your game's update loop
         space.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-        
-        
-
-        // 2D
-        //playerControllerSystem.Update(gameTime);
-
-        // 3D
-
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
-
-        // 2D
-        /*
-        spriteBatch.Begin();
-        spriteBatch.Draw(
-            ((SpriteComponent)player.GetComponent<SpriteComponent>()).Texture,
-            ((PositionComponent)player.GetComponent<PositionComponent>()).Position, Color.White);
-        spriteBatch.End();
-        */
-
         // 3D
-        renderingSystem.Draw();
-
+        renderingSystem.Draw(gameTime);
         base.Draw(gameTime);
     }
 }
