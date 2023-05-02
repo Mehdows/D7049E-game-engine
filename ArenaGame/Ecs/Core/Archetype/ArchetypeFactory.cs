@@ -26,22 +26,14 @@ public class ArchetypeFactory
     {
         switch (archetype)
         {
-            case EArchetype.Player:
-                return new PlayerArchetype(new[]
-                {
-                    ComponentManager.Instance.GetComponentArray(typeof(PositionComponent)).GetComponentType(),
-                    ComponentManager.Instance.GetComponentArray(typeof(VelocityComponent)).GetComponentType(),
-                    ComponentManager.Instance.GetComponentArray(typeof(InputComponent)).GetComponentType()
-                });
-        
             case EArchetype.Enemy:
                 return new EnemyArchetype(new[]
                 {
                     ComponentManager.Instance.GetComponentArray(typeof(PositionComponent)).GetComponentType(),
                     ComponentManager.Instance.GetComponentArray(typeof(VelocityComponent)).GetComponentType()
                 });
-            case EArchetype.Player3D:
-                return new Player3DArchetype(new[]
+            case EArchetype.Player:
+                return new PlayerArchetype(new[]
                 {
                     ComponentManager.Instance.GetComponentArray(typeof(InputComponent)).GetComponentType(),
                     ComponentManager.Instance.GetComponentArray(typeof(TransformComponent)).GetComponentType() // Can't define MeshComponent here since it can't have empty constructor

@@ -18,13 +18,14 @@ public class VelocityComponent: IComponent
         set { Velocity = new Vector2(Velocity.X, value); }
     }
 
-    public VelocityComponent(float x = 0, float y = 0)
+    public VelocityComponent(float x = 0, float y = 0) 
     {
         Velocity = new Vector2(x, y);
     }
 
-    public VelocityComponent()
+    public VelocityComponent() 
     {
         Velocity = new Vector2(0, 0);
     }
+
 }

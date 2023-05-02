@@ -1,18 +1,31 @@
-﻿using ArenaGame.Ecs.Archetypes;
+﻿using System;
+using ArenaGame.Ecs;
 using ArenaGame.Ecs.Components;
+using ArenaGame.Ecs.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
+using Matrix = BEPUutilities.Matrix;
+using Quaternion = BEPUutilities.Quaternion; 
+using Vector3 = BEPUutilities.Vector3;
 
-namespace ArenaGame.Ecs.Systems;
+namespace ArenaGame;
 
 public class RenderingSystem : ISystem
 {
-    public CameraComponent ActiveCamera { get; set; }
+    public Entity ActiveCamera { get; set; }
 
-    public RenderingSystem(CameraComponent activeCamera)
+    public RenderingSystem(Entity activeCamera)
     {
         ActiveCamera = activeCamera;
+        if (ActiveCamera != null)
+        {
+            Vector3 cameraPos = ((TransformComponent)ActiveCamera.GetComponent<TransformComponent>()).Position;
+            Console.Out.WriteLine($"Camera position: {cameraPos}");
+            // Print out the cameras rotation
+            Quaternion cameraRot = ((TransformComponent)ActiveCamera.GetComponent<TransformComponent>()).Rotation;
+            Console.Out.WriteLine($"Camera rotation: {cameraRot}");
+        
+        }
     }
 
     public void Draw()
@@ -32,48 +45,38 @@ public class RenderingSystem : ISystem
                 DrawModel(mesh.Model, worldMatrix);
             }
         }
-        
-        /*
-        List<Entity> entities = new List<Entity>();
-        Player3DArchetype player3DArchetype = (Player3DArchetype)ArchetypeFactory.GetArchetype(EArchetype.Player3D);
-        entities.AddRange(EntityManager.Instance.GetEntitiesWithArchetype(player3DArchetype));
-        foreach (Entity entity in entities )
-        {
-            MeshComponent mesh = (MeshComponent)entity.GetComponent<MeshComponent>();
-            TransformComponent transform = (TransformComponent)entity.GetComponent<TransformComponent>();
-            if (transform != null && mesh != null)
-            {
-                Matrix worldMatrix = Matrix.CreateScale(transform.Scale) *
-                                     Matrix.CreateFromQuaternion(transform.Rotation) *
-                                     Matrix.CreateTranslation(transform.Position);
-                DrawModel(mesh.Model, worldMatrix);
-            }
-        }
-        */
-        
     }
 
     private void DrawModel(Model model, Matrix worldMatrix)
     {
-        Matrix viewMatrix = ActiveCamera.ViewMatrix;
-        Matrix projectionMatrix = ActiveCamera.ProjectionMatrix;
+        PerspectiveCameraComponent activePerspectiveCameraComponent = (PerspectiveCameraComponent)ActiveCamera.GetComponent<PerspectiveCameraComponent>();
+        Matrix viewMatrix =  activePerspectiveCameraComponent.ViewMatrix;
+        Matrix projectionMatrix = activePerspectiveCameraComponent.ProjectionMatrix;
 
         foreach (ModelMesh mesh in model.Meshes)
         {
             foreach (BasicEffect effect in mesh.Effects)
             {
-                effect.World = worldMatrix;
-                effect.View = viewMatrix;
-                effect.Projection = projectionMatrix;
+                effect.World = MathConverter.Convert(worldMatrix);
+                effect.View = MathConverter.Convert(viewMatrix);
+                effect.Projection = MathConverter.Convert(projectionMatrix);
                 effect.EnableDefaultLighting();
             }
 
             mesh.Draw();
         }
     }
-
     public void Update(GameTime gameTime)
     {
-        
+            ((TransformComponent)ActiveCamera.GetComponent<TransformComponent>()).Position -= new Vector3(0.01f,0.01f,0f);
+            Vector3 cameraPos = ((TransformComponent)ActiveCamera.GetComponent<TransformComponent>()).Position;
+            // Console.Out.WriteLine($"Camera position: {cameraPos}");
+            // Rotate the camera slowly
+            Quaternion cameraRot = ((TransformComponent)ActiveCamera.GetComponent<TransformComponent>()).Rotation;
+            ((TransformComponent)ActiveCamera.GetComponent<TransformComponent>()).Rotation = Quaternion.CreateFromYawPitchRoll(0.01f,0.0f,0f) * cameraRot;
+            //Print out the cameras rotation
+            Console.Out.WriteLine($"Camera rotation: {cameraRot}");
+
     }
+
 }

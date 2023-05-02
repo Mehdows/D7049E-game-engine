@@ -5,9 +5,8 @@ using Microsoft.Xna.Framework.Media;
 namespace ArenaGame.Ecs.Components;
 
 
-public class AudioComponent
+public class AudioComponent: IComponent
 {
-
 
     public float volume;
     public Song song;
@@ -24,7 +23,7 @@ public class AudioComponent
     }
 
 
-    public AudioComponent(Song background_song, bool ShouldPlaySong)
+    public AudioComponent(Song background_song, bool ShouldPlaySong) 
     {
         // soundEffect = soundEffect
         song = background_song;
@@ -68,5 +67,4 @@ public class AudioComponent
         MediaPlayer.Stop();
         songIsPlaying = false;
     }
-
 }
