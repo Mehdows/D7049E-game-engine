@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Matrix = BEPUutilities.Matrix;
+using Quaternion = BEPUutilities.Quaternion;
 using Vector3 = BEPUutilities.Vector3;
 
 namespace ArenaGame;
@@ -69,8 +70,8 @@ public class Game1 : Game
 
         // Create a new camera and add the PerspectiveCameraComponent to it with a transform
         camera = entityManager.CreateEntity();
-        TransformComponent cameraTransform = (TransformComponent) camera.AddComponent<TransformComponent>(new TransformComponent(new Vector3(0, 0, -150f))); 
-        ((PerspectiveCameraComponent)camera.AddComponent<PerspectiveCameraComponent>(new PerspectiveCameraComponent(cameraTransform))).LookAt(player);
+        TransformComponent cameraTransform = (TransformComponent) camera.AddComponent<TransformComponent>(new TransformComponent(new Vector3(0f, 400f, -100f)));
+        ((PerspectiveCameraComponent)camera.AddComponent<PerspectiveCameraComponent>(new PerspectiveCameraComponent(cameraTransform))).LookAt((TransformComponent)player.GetComponent<TransformComponent>());
         
         // renderingSystem = new RenderingSystem(camera);
         renderingSystem = new RenderingSystem2(camera);
