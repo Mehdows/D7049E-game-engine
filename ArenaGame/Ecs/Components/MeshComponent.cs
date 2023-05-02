@@ -18,6 +18,7 @@ public class MeshComponent : IComponent, IDrawable
     
     public Model Model { get; set; }
     public Matrix Transform;
+    public StaticMesh Mesh;
     Microsoft.Xna.Framework.Matrix[] boneTransforms;
 
     public MeshComponent(Model model) 
@@ -25,8 +26,8 @@ public class MeshComponent : IComponent, IDrawable
         Vector3[] vertices;
         int[] indices;
         ModelDataExtractor.GetVerticesAndIndicesFromModel(model, out vertices, out indices);
-        var mesh  = new StaticMesh(vertices, indices, new AffineTransform(new Vector3(0, 0, 0)));
-        Transform = mesh.WorldTransform.Matrix;
+        Mesh  = new StaticMesh(vertices, indices, new AffineTransform(new Vector3(0, 0, 0)));
+        Transform = Mesh.WorldTransform.Matrix;
         Model = model;
     }
 

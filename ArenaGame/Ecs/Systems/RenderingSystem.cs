@@ -66,7 +66,6 @@ public class RenderingSystem : ISystem
             mesh.Draw();
         }
     }
-
     public void Update(GameTime gameTime)
     {
             ((TransformComponent)ActiveCamera.GetComponent<TransformComponent>()).Position -= new Vector3(0.01f,0.01f,0f);
@@ -79,4 +78,5 @@ public class RenderingSystem : ISystem
             Console.Out.WriteLine($"Camera rotation: {cameraRot}");
 
     }
+
 }

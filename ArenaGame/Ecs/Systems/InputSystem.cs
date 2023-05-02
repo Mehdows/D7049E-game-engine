@@ -1,4 +1,5 @@
-﻿using ArenaGame.Ecs.Archetypes;
+﻿using System;
+using ArenaGame.Ecs.Archetypes;
 using ArenaGame.Ecs.Components;
 using Microsoft.Xna.Framework;
 using MathHelper = BEPUutilities.MathHelper;
@@ -21,23 +22,28 @@ public class InputSystem: ISystem
 
         if (input.IsKeyHeld(InputKey.Left))
         {
+            Console.Out.WriteLine("Left");
             transform.Position += new Vector3(5f, 0f, 0f);
             transform.Rotation = Quaternion.CreateFromAxisAngle(transform.Forward, MathHelper.ToRadians(90));
         }
         if (input.IsKeyHeld(InputKey.Right))
         {
+            Console.Out.WriteLine("Right");
             transform.Position += new Vector3(-5f, 0f, 0f);
             transform.Rotation = Quaternion.CreateFromAxisAngle(transform.Forward, MathHelper.ToRadians(-90));
         }
         if (input.IsKeyHeld(InputKey.Up))
         {
+            Console.Out.WriteLine("Up");
             transform.Position += new Vector3(0f, 5f, 0f);
             transform.Rotation = Quaternion.CreateFromAxisAngle(transform.Forward, MathHelper.ToRadians(0));
         }
         if (input.IsKeyHeld(InputKey.Down))
         {
+            Console.Out.WriteLine("Down");
             transform.Position += new Vector3(0f, -5f, 0f);
             transform.Rotation = Quaternion.CreateFromAxisAngle(transform.Forward, MathHelper.ToRadians(180));
         }
+        Console.Out.WriteLine($"Player position {((TransformComponent)player3D.GetComponent<TransformComponent>()).Position} ");
     }
 }

@@ -73,9 +73,9 @@ public class Game1 : Game
         ((PerspectiveCameraComponent)camera.AddComponent<PerspectiveCameraComponent>(new PerspectiveCameraComponent(cameraTransform))).LookAt(player);
         
         // renderingSystem = new RenderingSystem(camera);
-        renderingSystem = new RenderingSystem2();
+        renderingSystem = new RenderingSystem2(camera);
         inputSystem = new InputSystem();
-        // followCameraSystem = new FollowCameraSystem(player, camera);
+        followCameraSystem = new FollowCameraSystem(player, camera);
 
         // Physics
         base.Initialize();
@@ -111,13 +111,14 @@ public class Game1 : Game
         ModelDataExtractor.GetVerticesAndIndicesFromModel(PlaygroundModel, out vertices, out indices);
         //Give the mesh information to a new StaticMesh.  
         //Give it a transformation which scoots it down below the kinematic box entity we created earlier.
-        var mesh = new StaticMesh(vertices, indices, new AffineTransform(new Vector3(0, 0, 0)));
+        var mesh = new StaticMesh(vertices, indices, new AffineTransform(new Vector3(0, -10, 0)));
 
         //Add it to the space!
         space.Add(mesh);
+        space.Add(playerMesh.Mesh);
         // Make it visible too
-        Components.Add((IGameComponent)playerMesh);
-        Components.Add((IGameComponent)new StaticModelComponent(PlaygroundModel, mesh.WorldTransform.Matrix));
+        Components.Add(playerMesh);
+        Components.Add(new StaticModelComponent(PlaygroundModel, mesh.WorldTransform.Matrix));
 
         //Hook an event handler to an entity to handle some game logic.
         //Refer to the Entity Events documentation for more information.
@@ -167,7 +168,6 @@ public class Game1 : Game
     {
         PerspectiveCameraComponent cameraComponent =
             (PerspectiveCameraComponent)camera.GetComponent<PerspectiveCameraComponent>();
-        renderingSystem.Update(gameTime);
         if (followCameraSystem != null)
         {
             followCameraSystem.Update(gameTime);

@@ -25,7 +25,7 @@ public class TransformComponent : IComponent
     }
 
     //TODO: Kan säkert görs mkt snyggare men det funkar just nu
-    public Vector3 Forward => Vector3.Down;
+    public Vector3 Forward => Vector3.Backward;
     public Vector3 Up => Vector3.Up; 
 
     public void LookAt(Vector3 target)

@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Collections.Specialized;
+using ArenaGame.Ecs.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MathHelper = BEPUutilities.MathHelper;
 using Matrix = BEPUutilities.Matrix;
 using Vector3 = BEPUutilities.Vector3;
 
-namespace ArenaGame.Ecs.Components;
+namespace ArenaGame;
 
 public class PerspectiveCameraComponent : IComponent 
 {
-    public float FieldOfView { get; set; } = MathHelper.ToRadians(90f);
+    public float FieldOfView { get; set; } = MathHelper.ToRadians(45f);
     public float AspectRatio { get; set; } = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.AspectRatio;
     public float NearClipPlane { get; set; } = 0.1f;
     public float FarClipPlane { get; set; } = 1000f;
@@ -38,12 +38,18 @@ public class PerspectiveCameraComponent : IComponent
         Target = target;    
         UpdateViewMatrix();
     }
+    
+    public override void Update(GameTime gameTime)
+    {
+        UpdateViewMatrix();
+        UpdateProjectionMatrix();
+    }
 
     private void UpdateViewMatrix()
     {
-        ViewMatrix = Matrix.CreateLookAtRH(Transform.Position, Transform.Position + Transform.Forward, -Transform.Up);
-        Vector3 targetPosition = ((TransformComponent)Target.GetComponent<TransformComponent>()).Position;
-        ViewMatrix = Matrix.CreateLookAtRH(Transform.Position, targetPosition, Vector3.UnitY);
+        // ViewMatrix = Matrix.CreateLookAtRH(Transform.Position, Transform.Position + Transform.Forward, -Transform.Up);
+        // Vector3 targetPosition = ((TransformComponent)Target.GetComponent<TransformComponent>()).Position;
+        ViewMatrix = Matrix.CreateLookAtRH(new Vector3(0,100,150), new Vector3(0,0,0), Transform.Up);
     }
 
     public void UpdateProjectionMatrix()
