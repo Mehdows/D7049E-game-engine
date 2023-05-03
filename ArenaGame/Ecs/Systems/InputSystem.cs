@@ -89,7 +89,7 @@ public class InputSystem: ISystem
         }
         
         mesh.Capsule.LinearVelocity = Accelerate(movementDirection, speed);
-        // transform.Rotation = Rotate(transform, movementDirection);
+        transform.Orientation = Rotate(transform, movementDirection);
         transform.Position = mesh.Capsule.Position;
     }
     
