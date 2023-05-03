@@ -25,7 +25,7 @@ public class MeshComponent : IComponent
     public new void LoadContent(ContentManager contentManager)
     {
         Capsule = new Capsule(new Vector3(0, 40, 0), 20, 5);
-        Transform =  Matrix.CreateScale(Capsule.Radius/15, Capsule.Length/60, Capsule.Radius/15);
+        Transform =  Matrix.CreateScale(Capsule.Radius/30, Capsule.Length/110, Capsule.Radius/30);
         Model = contentManager.Load<Model>(modelPath);
         
     }
