@@ -28,6 +28,14 @@ public class ComponentArray {
         return component;
     }
 
+    public void ModifyComponentId(int entityId, int newEntityId) {
+        for (int i = 0; i < entityIds.Length; i++) {
+            if (entityIds[i] == entityId) {
+                entityIds[i] = newEntityId;
+            }
+        }
+    }
+
     public void RemoveComponent(int entityId) {
         for (int i = 0; i < components.Length; i++) {
             if (entityIds[i] == entityId) {

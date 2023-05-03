@@ -1,5 +1,6 @@
 ﻿using System;
 using BEPUphysics.BroadPhaseEntries;
+using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -9,30 +10,23 @@ using Vector3 = BEPUutilities.Vector3;
 
 namespace ArenaGame.Ecs.Components;
 
-public class MeshComponent : IComponent, IDrawable 
+public class MeshComponent : IComponent
 {
-    public int DrawOrder { get; }
-    public bool Visible { get; }
-    public event EventHandler<EventArgs> DrawOrderChanged;
-    public event EventHandler<EventArgs> VisibleChanged;
-    
-    public Model Model { get; set; }
+    private readonly String modelPath;
     public Matrix Transform;
-    public StaticMesh Mesh;
-    Microsoft.Xna.Framework.Matrix[] boneTransforms;
+    public Capsule Capsule { get; set; }
+    public Model Model { get; set; }
 
-    public MeshComponent(Model model) 
+    public MeshComponent(String modelPath) 
     {
-        Vector3[] vertices;
-        int[] indices;
-        ModelDataExtractor.GetVerticesAndIndicesFromModel(model, out vertices, out indices);
-        Mesh  = new StaticMesh(vertices, indices, new AffineTransform(new Vector3(0, 0, 0)));
-        Transform = Mesh.WorldTransform.Matrix;
-        Model = model;
+        this.modelPath = modelPath;
     }
 
-    public MeshComponent() 
+    public new void LoadContent(ContentManager contentManager)
     {
-        throw new ContentLoadException("MeshComponent must be initialized with a model.");
+        Capsule = new Capsule(new Vector3(0, 40, 0), 20, 5);
+        Transform =  Matrix.CreateScale(Capsule.Radius/15, Capsule.Length/60, Capsule.Radius/15);
+        Model = contentManager.Load<Model>(modelPath);
+        
     }
 }

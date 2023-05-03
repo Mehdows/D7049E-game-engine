@@ -6,17 +6,17 @@ namespace ArenaGame;
 
 public class Entity
 {
-    public int Id { get; }
+    public int Id { get; set; }
     
-    public Entity(int id )
+    public Entity(int id = -1)
     {
         Id = id;
     }
 
-    public IComponent AddComponent<T>(IComponent component = null) where T: IComponent, new()
+    public IComponent AddComponent(IComponent component = null) 
     {
-        var newComponent = component ?? new T();
-        Type componentType = typeof(T);
+        var newComponent = component;
+        Type componentType = newComponent.GetType();
         var createdComponent = ComponentManager.Instance.GetComponentArray(componentType)
             .AddComponent(Id, newComponent);
         return createdComponent;

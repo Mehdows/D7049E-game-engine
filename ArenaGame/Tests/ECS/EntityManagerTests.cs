@@ -114,7 +114,7 @@ public class EntityManagerTests
 
         // Add component to entity
         PositionComponent position = new PositionComponent(0, 0);
-        entity.AddComponent<PositionComponent>();
+        entity.AddComponent(position);
 
         // Retrieve component array and check if component was added
         ComponentArray componentArray = ComponentManager.Instance.GetComponentArray(typeof(PositionComponent));
@@ -130,7 +130,7 @@ public class EntityManagerTests
         ComponentManager.Instance.RegisterComponent(typeof(PositionComponent));
 
         // Add component to entity
-        entity.AddComponent<PositionComponent>();
+        entity.AddComponent(new PositionComponent(0,0));
 
         // Remove component from entity
         entity.RemoveComponent<PositionComponent>();
@@ -150,7 +150,7 @@ public class EntityManagerTests
 
         // Add component to entity
         PositionComponent position = new PositionComponent(0, 0);
-        entity.AddComponent<PositionComponent>(position);
+        entity.AddComponent(position);
 
         // Retrieve component from entity and check if it is the correct one
         PositionComponent retrievedPosition = (PositionComponent)entity.GetComponent<PositionComponent>();
@@ -169,11 +169,11 @@ public class EntityManagerTests
         ComponentManager.Instance.RegisterComponent(typeof(VelocityComponent));
 
         // Add components to entities
-        entity1.AddComponent<PositionComponent>();
-        entity2.AddComponent<PositionComponent>();
-        entity2.AddComponent<VelocityComponent>(new VelocityComponent(1, 1));
-        entity3.AddComponent<PositionComponent>();
-        entity3.AddComponent<VelocityComponent>(new VelocityComponent(2, 2));
+        entity1.AddComponent(new PositionComponent(0,0));
+        entity2.AddComponent(new PositionComponent(0,0));
+        entity2.AddComponent(new VelocityComponent(1, 1));
+        entity3.AddComponent(new PositionComponent(0,0));
+        entity3.AddComponent(new VelocityComponent(2, 2));
 
         // Retrieve entities with position and velocity components and check if they are correct
         Archetype archetype = new Archetype(new Type[] { typeof(PositionComponent),  typeof(VelocityComponent) });

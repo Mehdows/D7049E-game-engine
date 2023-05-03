@@ -29,9 +29,11 @@ public class RenderingSystem2 : ISystem
             var entity = EntityManager.Instance.GetEntity(entityID);
             MeshComponent meshComponent = (MeshComponent)component;
             TransformComponent transform = (TransformComponent)entity.GetComponent<TransformComponent>();
-            Matrix worldMatrix = Matrix.CreateScale(transform.Scale) *
-                                 Matrix.CreateFromQuaternion(transform.Rotation) *
-                                 Matrix.CreateTranslation(transform.Position);
+            // Matrix worldMatrix = Matrix.CreateScale(transform.Scale) *
+            //                      Matrix.CreateFromQuaternion(transform.Rotation) *
+            //                      Matrix.CreateTranslation(transform.Position);
+            
+            Matrix worldMatrix = meshComponent.Transform * transform.WorldTransform;
             foreach (ModelMesh mesh in meshComponent.Model.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)

@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using ArenaGame;
 using ArenaGame.Ecs.Components;
+using BEPUphysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using GameComponent = Microsoft.Xna.Framework.GameComponent;
 
 public class InputComponent : IComponent
 {
+    
     private readonly Dictionary<InputKey, bool> _keyStates;
     private readonly Dictionary<InputKey, bool> _previousKeyStates;
 
     public InputComponent() 
     {
+        
         _keyStates = new Dictionary<InputKey, bool>();
         _previousKeyStates = new Dictionary<InputKey, bool>();
 
@@ -23,7 +26,7 @@ public class InputComponent : IComponent
             _previousKeyStates[key] = false;
         }
     }
-
+    
     public override void Update(GameTime gameTime)
     {
         // Copy current state to previous state

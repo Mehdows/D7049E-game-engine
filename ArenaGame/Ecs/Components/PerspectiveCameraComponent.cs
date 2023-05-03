@@ -10,26 +10,26 @@ namespace ArenaGame;
 
 public class PerspectiveCameraComponent : IComponent 
 {
-    public float FieldOfView { get; set; } = MathHelper.ToRadians(45f);
-    public float AspectRatio { get; set; } = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.AspectRatio;
-    public float NearClipPlane { get; set; } = 0.1f;
-    public float FarClipPlane { get; set; } = 1000f;
+    public float FieldOfView { get; set; }
+    public float AspectRatio { get; set; }
+    public float NearClipPlane { get; set; }
+    public float FarClipPlane { get; set; }
     
     public Matrix ViewMatrix { get; set; }
     public Matrix ProjectionMatrix { get; set; }
-    public Entity Target { get; set; }
+    public TransformComponent Target { get; set; }
     public TransformComponent Transform { get; set; }
 
-    public PerspectiveCameraComponent(TransformComponent transform)
+    public PerspectiveCameraComponent(float fov, float aspectRatio, float nearClipPlane, float farClipPlane )
     {
-        Transform = transform;
+        FieldOfView = MathHelper.ToRadians(fov);
+        AspectRatio = aspectRatio;
+        NearClipPlane = nearClipPlane;
+        FarClipPlane = farClipPlane;
         UpdateProjectionMatrix();
     }
-    public PerspectiveCameraComponent() 
-    {
-    }
 
-    public void LookAt(Entity target = null)
+    public void LookAt(TransformComponent target = null)
     {
         if (target == null)
         {
@@ -45,11 +45,9 @@ public class PerspectiveCameraComponent : IComponent
         UpdateProjectionMatrix();
     }
 
-    private void UpdateViewMatrix()
+    public void UpdateViewMatrix()
     {
-        // ViewMatrix = Matrix.CreateLookAtRH(Transform.Position, Transform.Position + Transform.Forward, -Transform.Up);
-        // Vector3 targetPosition = ((TransformComponent)Target.GetComponent<TransformComponent>()).Position;
-        ViewMatrix = Matrix.CreateLookAtRH(new Vector3(0,100,150), new Vector3(0,0,0), Transform.Up);
+        ViewMatrix = Matrix.CreateLookAtRH(Transform.Position, Target.Position, Vector3.Up);
     }
 
     public void UpdateProjectionMatrix()

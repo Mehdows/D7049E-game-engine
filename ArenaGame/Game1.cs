@@ -6,6 +6,7 @@ using ArenaGame.Ecs.Systems;
 using BEPUphysics;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
+using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using BEPUphysics.NarrowPhaseSystems.Pairs;
 using BEPUutilities;
@@ -14,6 +15,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Matrix = BEPUutilities.Matrix;
+using Quaternion = BEPUutilities.Quaternion;
 using Vector3 = BEPUutilities.Vector3;
 
 namespace ArenaGame;
@@ -34,6 +36,8 @@ public class Game1 : Game
 
     // 3D rendering
     private Entity player;
+    private TransformComponent playerTransform;
+    
     private Entity camera;
     // private RenderingSystem renderingSystem;
     private RenderingSystem2 renderingSystem;
@@ -44,7 +48,7 @@ public class Game1 : Game
     // Physics
     public Model CubeModel;
     public Model PlaygroundModel;
-    private Space space;
+    internal Space GameSpace { get; set; }
     private BEPUphysics.Entities.Entity entity;
 
     public Game1()
@@ -64,15 +68,27 @@ public class Game1 : Game
     protected override void Initialize()
     {
         // 3D
-        PlayerArchetype playerArchetype = ArchetypeFactory.GetArchetype(EArchetype.Player) as PlayerArchetype;
-        player = entityManager.CreateEntityWithArchetype(playerArchetype);
+        EntityBuilder builder = new EntityBuilder()
+            .AddTransformComponent(0,0,0)
+            .AddMeshComponent("Models/FreeMale")
+            .AddInputComponent();
+        player = builder.Build();
+            // PlayerArchetype playerArchetype = ArchetypeFactory.GetArchetype(EArchetype.Player) as PlayerArchetype;
+        // player = entityManager.CreateEntityWithArchetype(playerArchetype);
+        // playerTransform = (TransformComponent) player.GetComponent<TransformComponent>();
+        // playerTransform = new TransformComponent(new Vector3(100, 10, 10));
+        
 
         // Create a new camera and add the PerspectiveCameraComponent to it with a transform
-        camera = entityManager.CreateEntity();
-        TransformComponent cameraTransform = (TransformComponent) camera.AddComponent<TransformComponent>(new TransformComponent(new Vector3(0, 0, -150f))); 
-        ((PerspectiveCameraComponent)camera.AddComponent<PerspectiveCameraComponent>(new PerspectiveCameraComponent(cameraTransform))).LookAt(player);
+        builder = new EntityBuilder()
+            .AddTransformComponent(0f, 400f, -100f)
+            .AddPerspectiveCameraComponent(45, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.AspectRatio, 0.1f, 1000f);
+        camera = builder.Build();
+        TransformComponent cameraTransform = (TransformComponent)camera.GetComponent<TransformComponent>(); 
+        ((PerspectiveCameraComponent)camera.GetComponent<PerspectiveCameraComponent>()).Transform = cameraTransform;
+        ((PerspectiveCameraComponent)camera.GetComponent<PerspectiveCameraComponent>())
+            .LookAt((TransformComponent)player.GetComponent<TransformComponent>());
         
-        // renderingSystem = new RenderingSystem(camera);
         renderingSystem = new RenderingSystem2(camera);
         inputSystem = new InputSystem();
         followCameraSystem = new FollowCameraSystem(player, camera);
@@ -83,23 +99,36 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
+        GameSpace = new Space();
+        GameSpace.ForceUpdater.Gravity = new Vector3(0, -9.81f, 0);
+        
+        CubeModel = Content.Load<Model>("Models/cube");
+        // Call the load content for each MeshComponent in the component manager
+        foreach ((var entityId, var component) in ComponentManager.Instance.GetComponentArray(typeof(MeshComponent)).GetEntityComponents())
+        {
+            TransformComponent transform =
+                (TransformComponent)EntityManager.Instance.GetEntity(entityId).GetComponent<TransformComponent>();
+            MeshComponent meshComponent = (MeshComponent) component;
+            meshComponent.LoadContent(Content);
+            GameSpace.Add(meshComponent.Capsule);
+            Matrix scaling = Matrix.CreateScale(meshComponent.Capsule.Radius, meshComponent.Capsule.Length, meshComponent.Capsule.Radius);
+            Components.Add(new EntityModel(meshComponent.Capsule, CubeModel, scaling, this));
+        }
+            
         // 3D
-        Model playerModel = Content.Load<Model>("Models/FreeMale");
-        MeshComponent playerMesh =(MeshComponent) player.AddComponent<MeshComponent>(new MeshComponent(playerModel));
+        // Model playerModel = Content.Load<Model>("Models/FreeMale");
+        // MeshComponent playerMesh =(MeshComponent) player.AddComponent<MeshComponent>(new MeshComponent(playerModel));
 
         // Physics
-        CubeModel = Content.Load<Model>("Models/cube");
         PlaygroundModel = Content.Load<Model>("Models/playground");
-        space = new Space();
-        space.ForceUpdater.Gravity = new Vector3(0, -9.81f, 0);
-        Box ground = new Box(Vector3.Zero, 50, 1, 50);
-        space.Add(ground);
+        Box ground = new Box(Vector3.Zero, 500, 1, 500);
+        GameSpace.Add(ground);
 
         //Now that we have something to fall on, make a few more boxes.
         //These need to be dynamic, so give them a mass- in this case, 1 will be fine.
-        space.Add(new Box(new Vector3(0, 4, 0), 1, 1, 1, 1));
-        space.Add(new Box(new Vector3(0, 8, 0), 1, 1, 1, 1));
-        space.Add(new Box(new Vector3(0, 12, 0), 1, 1, 1, 1));
+        GameSpace.Add(new Box(new Vector3(0, 4, 0), 1, 1, 1, 1));
+        GameSpace.Add(new Box(new Vector3(0, 8, 0), 1, 1, 1, 1));
+        GameSpace.Add(new Box(new Vector3(0, 12, 0), 1, 1, 1, 1));
 
         //Create a physical environment from a triangle mesh.
         //First, collect the the mesh data from the model using a helper function.
@@ -114,24 +143,22 @@ public class Game1 : Game
         var mesh = new StaticMesh(vertices, indices, new AffineTransform(new Vector3(0, -10, 0)));
 
         //Add it to the space!
-        space.Add(mesh);
-        space.Add(playerMesh.Mesh);
+        GameSpace.Add(mesh);
         // Make it visible too
-        Components.Add(playerMesh);
         Components.Add(new StaticModelComponent(PlaygroundModel, mesh.WorldTransform.Matrix));
 
         //Hook an event handler to an entity to handle some game logic.
         //Refer to the Entity Events documentation for more information.
         Box deleterBox = new Box(new Vector3(5, 2, 0), 3, 3, 3);
-        space.Add(deleterBox);
+        GameSpace.Add(deleterBox);
         deleterBox.CollisionInformation.Events.InitialCollisionDetected += HandleCollision;
 
         //Go through the list of entities in the space and create a graphical representation for them.
-        foreach (BEPUphysics.Entities.Entity e in space.Entities)
+        foreach (BEPUphysics.Entities.Entity e in GameSpace.Entities)
         {
-            Box box = e as Box;
-            if (box != null) //This won't create any graphics for an entity that isn't a box since the model being used is a box.
+            if (e as Box != null)
             {
+                Box box = e as Box;
                 Matrix
                     scaling = Matrix.CreateScale(box.Width, box.Height,
                         box.Length); //Since the cube model is 1x1x1, it needs to be scaled to match the size of each individual box.
@@ -139,6 +166,12 @@ public class Game1 : Game
                 //Add the drawable game component for this entity to the game.
                 Components.Add(model);
                 e.Tag = model; //set the object tag of this entity to the model so that it's easy to delete the graphics component later if the entity is removed.
+            }else if (e as Cylinder != null)
+            {
+                Cylinder cylinder = e as Cylinder;
+                EntityModel model = new EntityModel(e, CubeModel, Matrix.Identity, this);
+                Components.Add(model);
+
             }
         }
     }
@@ -158,7 +191,7 @@ public class Game1 : Game
         if (otherEntityInformation != null)
         {
             //We hit an entity! remove it.
-            space.Remove(otherEntityInformation.Entity);
+            GameSpace.Remove(otherEntityInformation.Entity);
             //Remove the graphics too.
             Components.Remove((EntityModel)otherEntityInformation.Entity.Tag);
         }
@@ -166,8 +199,6 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
-        PerspectiveCameraComponent cameraComponent =
-            (PerspectiveCameraComponent)camera.GetComponent<PerspectiveCameraComponent>();
         if (followCameraSystem != null)
         {
             followCameraSystem.Update(gameTime);
@@ -176,28 +207,30 @@ public class Game1 : Game
         // Allows the game to exit
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
-        KeyboardState KeyboardState = Keyboard.GetState();
-        MouseState MouseState = Mouse.GetState();
-        if (MouseState.LeftButton == ButtonState.Pressed)
-        {
-            //If the user is clicking, start firing some boxes.
-            //First, create a new dynamic box at the camera's location.
-            Box toAdd = new Box(cameraComponent.Transform.Position, 1, 1, 1, 1);
-            //Set the velocity of the new box to fly in the direction the camera is pointing.
-            //Entities have a whole bunch of properties that can be read from and written to.
-            //Try looking around in the entity's available properties to get an idea of what is available.
-            toAdd.LinearVelocity = cameraComponent.Transform.Forward * 10;
-            //Add the new box to the simulation.
-            space.Add(toAdd);
-
-            //Add a graphical representation of the box to the drawable game components.
-            EntityModel model = new EntityModel(toAdd, CubeModel, Matrix.Identity, this);
-            Components.Add(model);
-            toAdd.Tag = model; //set the object tag of this entity to the model so that it's easy to delete the graphics component later if the entity is removed.
-        }
+        
+        
+        
+        // MouseState MouseState = Mouse.GetState();
+        // if (MouseState.LeftButton == ButtonState.Pressed)
+        // {
+        //     //If the user is clicking, start firing some boxes.
+        //     //First, create a new dynamic box at the camera's location.
+        //     Box toAdd = new Box(cameraComponent.Transform.Position, 1, 1, 1, 1);
+        //     //Set the velocity of the new box to fly in the direction the camera is pointing.
+        //     //Entities have a whole bunch of properties that can be read from and written to.
+        //     //Try looking around in the entity's available properties to get an idea of what is available.
+        //     toAdd.LinearVelocity = cameraComponent.Transform.Forward * 10;
+        //     //Add the new box to the simulation.
+        //     GameSpace.Add(toAdd);
+        //
+        //     //Add a graphical representation of the box to the drawable game components.
+        //     EntityModel model = new EntityModel(toAdd, CubeModel, Matrix.Identity, this);
+        //     Components.Add(model);
+        //     toAdd.Tag = model; //set the object tag of this entity to the model so that it's easy to delete the graphics component later if the entity is removed.
+        // }
 
         // Update the Space object in your game's update loop
-        space.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+        GameSpace.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
         base.Update(gameTime);
     }
 
