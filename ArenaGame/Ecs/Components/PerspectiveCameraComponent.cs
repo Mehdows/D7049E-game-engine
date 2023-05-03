@@ -14,6 +14,7 @@ public class PerspectiveCameraComponent : IComponent
     public float AspectRatio { get; set; }
     public float NearClipPlane { get; set; }
     public float FarClipPlane { get; set; }
+    public float ViewingAngle { get; set; }
     
     public Matrix ViewMatrix { get; set; }
     public Matrix ProjectionMatrix { get; set; }
@@ -26,6 +27,8 @@ public class PerspectiveCameraComponent : IComponent
         AspectRatio = aspectRatio;
         NearClipPlane = nearClipPlane;
         FarClipPlane = farClipPlane;
+        ViewingAngle = 45f;
+        
         UpdateProjectionMatrix();
     }
 
@@ -47,11 +50,12 @@ public class PerspectiveCameraComponent : IComponent
 
     public void UpdateViewMatrix()
     {
-        ViewMatrix = Matrix.CreateLookAtRH(Transform.Position, Target.Position, Vector3.Up);
+        // ViewMatrix = Matrix.CreateLookAtRH(Transform.Position, Target.Position, Vector3.Up);
+        ViewMatrix = Matrix.CreateLookAtRH(new Vector3(Transform.Position.X, 60f, Transform.Position.Z), Target.Position, Vector3.Up);
     }
 
     public void UpdateProjectionMatrix()
     {
-        ProjectionMatrix = Matrix.CreatePerspectiveFieldOfViewRH(FieldOfView, AspectRatio, NearClipPlane, FarClipPlane);
+        ProjectionMatrix = Matrix.CreatePerspectiveFieldOfViewRH(MathHelper.ToRadians(ViewingAngle), AspectRatio, NearClipPlane, FarClipPlane);
     }
 }

@@ -82,15 +82,18 @@ public class InputSystem: ISystem
         {
             // Lerp the linear velocity to zero
             if (mesh.Capsule.LinearVelocity.LengthSquared() < 0.1f)
-                mesh.Capsule.LinearVelocity = Vector3.Zero;    
+            {
+                mesh.Capsule.LinearVelocity = new Vector3(0, mesh.Capsule.LinearVelocity.Y, 0);
+            }
             else
-                mesh.Capsule.LinearVelocity = Vector3.Lerp(mesh.Capsule.LinearVelocity, Vector3.Zero, 0.1f);
+                mesh.Capsule.LinearVelocity = Vector3.Lerp(mesh.Capsule.LinearVelocity, new Vector3(0, mesh.Capsule.LinearVelocity.Y, 0), 0.1f);
             
         }
         
-        mesh.Capsule.LinearVelocity = Accelerate(movementDirection, speed);
-        transform.Orientation = Rotate(transform, movementDirection);
         transform.Position = mesh.Capsule.Position;
+        Vector3 newVelocity = Accelerate(movementDirection, speed);
+        mesh.Capsule.LinearVelocity = new Vector3(newVelocity.X, mesh.Capsule.LinearVelocity.Y, newVelocity.Z);
+        transform.Orientation = Rotate(transform, movementDirection);
     }
     
     private Vector3 Accelerate(Vector3 direction, float speed)
