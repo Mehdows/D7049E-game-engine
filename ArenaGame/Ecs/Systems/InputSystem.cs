@@ -90,9 +90,10 @@ public class InputSystem: ISystem
             
         }
         
-        transform.Position = mesh.Capsule.Position;
+        transform.WorldTransform = mesh.Capsule.WorldTransform;
         Vector3 newVelocity = Accelerate(movementDirection, speed);
         mesh.Capsule.LinearVelocity = new Vector3(newVelocity.X, mesh.Capsule.LinearVelocity.Y, newVelocity.Z);
+        transform.WorldTransform = mesh.Capsule.WorldTransform;
         transform.Orientation = Rotate(transform, movementDirection);
     }
     
@@ -104,7 +105,7 @@ public class InputSystem: ISystem
         Vector3 velocity = ((MeshComponent)player.GetComponent<MeshComponent>()).Capsule.LinearVelocity;
         
         // Calculate the new velocity
-        Vector3 newVelocity = velocity + direction * speed;
+        Vector3 newVelocity = velocity + (direction * speed); 
         
         if (newVelocity.LengthSquared() > maxSpeed * maxSpeed)
         {
