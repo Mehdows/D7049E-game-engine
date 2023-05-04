@@ -11,12 +11,13 @@ public class  CollisionComponent: IComponent
 {
     public Matrix Transform;
     public ConvexShape Shape { get; set; }
-    public Entity<ConvexCollidable<ConvexShape>> CollisionEntity { get; set; } 
+    public CollisionShape CollisionEntity { get; set; } 
 
-    public CollisionComponent(ConvexShape shape, Vector3 transformScale, string tag)
+    public CollisionComponent(Vector3 startPosition, ConvexShape shape, Vector3 transformScale, string tag)
     {
+        // new Capsule(new Vector3(0,20,20),10,2,3);
         Shape = shape;
-        CollisionEntity = new Entity<ConvexCollidable<ConvexShape>>(new ConvexCollidable<ConvexShape>(Shape), 10f);
+        CollisionEntity = new CollisionShape(startPosition, Shape, 10f);
         CollisionEntity.Tag = tag;
         CollisionEntity.AngularDamping = 0f;
         CollisionEntity.LocalInertiaTensorInverse = new Matrix3x3(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0.0f);

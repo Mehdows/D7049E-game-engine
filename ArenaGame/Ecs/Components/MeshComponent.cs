@@ -1,12 +1,6 @@
 ﻿using System;
-using BEPUphysics.BroadPhaseEntries;
-using BEPUphysics.Entities.Prefabs;
-using BEPUutilities;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Matrix = BEPUutilities.Matrix;
-using Vector3 = BEPUutilities.Vector3;
 
 namespace ArenaGame.Ecs.Components;
 

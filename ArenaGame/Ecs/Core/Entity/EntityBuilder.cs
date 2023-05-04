@@ -24,6 +24,12 @@ public class EntityBuilder
         componentTypes.Add(typeof(TransformComponent));
         return this;
     }
+    public EntityBuilder AddTransformComponent() {
+        TransformComponent transformComponent = new TransformComponent();
+        entity.AddComponent(transformComponent);
+        componentTypes.Add(typeof(TransformComponent));
+        return this;
+    }
     
     public EntityBuilder AddMeshComponent(string meshName) {
         MeshComponent meshComponent = new MeshComponent(meshName);
@@ -32,8 +38,8 @@ public class EntityBuilder
         return this;
     }
     
-    public EntityBuilder AddCollisionComponent(ConvexShape shape, Vector3 transformScale, string tag) {
-        CollisionComponent collisionComponent = new CollisionComponent(shape, transformScale, tag);
+    public EntityBuilder AddCollisionComponent(Vector3 startPosition,ConvexShape shape, Vector3 transformScale, string tag) {
+        CollisionComponent collisionComponent = new CollisionComponent(startPosition, shape, transformScale, tag);
         entity.AddComponent(collisionComponent);
         componentTypes.Add(typeof(CollisionComponent));
         return this;

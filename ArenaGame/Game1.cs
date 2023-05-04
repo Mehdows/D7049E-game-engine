@@ -74,9 +74,9 @@ public class Game1 : Game
         GameSpace.ForceUpdater.Gravity = new Vector3(0, -9.81f, 0);
         // 3D
         EntityBuilder builder = new EntityBuilder()
-            .AddTransformComponent(0,0,0)
+            .AddTransformComponent()
             .AddMeshComponent("Models/FreeMale")
-            .AddCollisionComponent(new CapsuleShape(10f, 5f), new Vector3(30, 60, 30), "Player")
+            .AddCollisionComponent(new Vector3(30,30,0),new CapsuleShape(10f, 5f), new Vector3(30, 60, 30), "Player")
             .AddInputComponent();
         player = builder.Build();
 
