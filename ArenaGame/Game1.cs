@@ -36,12 +36,14 @@ public class Game1 : Game
 
     // 3D rendering
     private Entity player;
+    private Entity enemy;
     private TransformComponent playerTransform;
     
     private Entity camera;
     // private RenderingSystem renderingSystem;
     private RenderingSystem2 renderingSystem;
     private InputSystem inputSystem;
+    private PhysicsSystem physicsSystem;
     private FollowCameraSystem followCameraSystem;
     private Model model;
 
@@ -67,16 +69,20 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
+        GameSpace = new Space();
+        GameSpace.ForceUpdater.Gravity = new Vector3(0, -9.81f, 0);
         // 3D
         EntityBuilder builder = new EntityBuilder()
             .AddTransformComponent(0,0,0)
             .AddMeshComponent("Models/FreeMale")
             .AddInputComponent();
         player = builder.Build();
-            // PlayerArchetype playerArchetype = ArchetypeFactory.GetArchetype(EArchetype.Player) as PlayerArchetype;
-        // player = entityManager.CreateEntityWithArchetype(playerArchetype);
-        // playerTransform = (TransformComponent) player.GetComponent<TransformComponent>();
-        // playerTransform = new TransformComponent(new Vector3(100, 10, 10));
+        
+        builder = new EntityBuilder()
+            .AddTransformComponent(0,0,0)
+            .AddMeshComponent("Models/FreeMale")
+            .AddInputComponent();
+        player = builder.Build();
         
 
         // Create a new camera and add the PerspectiveCameraComponent to it with a transform
@@ -92,15 +98,14 @@ public class Game1 : Game
         renderingSystem = new RenderingSystem2(camera);
         inputSystem = new InputSystem();
         followCameraSystem = new FollowCameraSystem(player, camera);
-
+        physicsSystem = new PhysicsSystem(GameSpace, this);
+        
         // Physics
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
-        GameSpace = new Space();
-        GameSpace.ForceUpdater.Gravity = new Vector3(0, -9.81f, 0);
         
         CubeModel = Content.Load<Model>("Models/cube");
         // Call the load content for each MeshComponent in the component manager
@@ -123,12 +128,22 @@ public class Game1 : Game
         PlaygroundModel = Content.Load<Model>("Models/playground");
         Box ground = new Box(Vector3.Zero, 500, 1, 500);
         GameSpace.Add(ground);
-
-        //Now that we have something to fall on, make a few more boxes.
-        //These need to be dynamic, so give them a mass- in this case, 1 will be fine.
-        GameSpace.Add(new Box(new Vector3(0, 4, 0), 1, 1, 1, 1));
-        GameSpace.Add(new Box(new Vector3(0, 8, 0), 1, 1, 1, 1));
-        GameSpace.Add(new Box(new Vector3(0, 12, 0), 1, 1, 1, 1));
+        
+        Box Enemy1 = new Box(new Vector3(0, 10, 0), 5, 5, 5, 1);
+        Box Enemy2 = new Box(new Vector3(0, 15, 0), 5, 5, 5, 1);
+        Box Enemy3 = new Box(new Vector3(0, 20, 0), 5, 5, 5, 1);
+        GameSpace.Add(Enemy1);
+        GameSpace.Add(Enemy2);
+        GameSpace.Add(Enemy3);
+        Enemy1.Tag = "Enemy";
+        Enemy2.Tag = "Enemy";
+        Enemy3.Tag = "Enemy";
+        
+        // //Now that we have something to fall on, make a few more boxes.
+        // //These need to be dynamic, so give them a mass- in this case, 1 will be fine.
+        // GameSpace.Add(new Box(new Vector3(0, 4, 0), 5, 5, 5, 1));
+        // GameSpace.Add(new Box(new Vector3(0, 8, 0), 5, 5, 5, 1));
+        // GameSpace.Add(new Box(new Vector3(0, 12, 0), 5, 5, 5, 1));
 
         //Create a physical environment from a triangle mesh.
         //First, collect the the mesh data from the model using a helper function.
@@ -147,11 +162,11 @@ public class Game1 : Game
         // Make it visible too
         Components.Add(new StaticModelComponent(PlaygroundModel, mesh.WorldTransform.Matrix));
 
-        //Hook an event handler to an entity to handle some game logic.
-        //Refer to the Entity Events documentation for more information.
-        Box deleterBox = new Box(new Vector3(5, 2, 0), 3, 3, 3);
-        GameSpace.Add(deleterBox);
-        deleterBox.CollisionInformation.Events.InitialCollisionDetected += HandleCollision;
+        // //Hook an event handler to an entity to handle some game logic.
+        // //Refer to the Entity Events documentation for more information.
+        // Box deleterBox = new Box(new Vector3(5, 2, 0), 3, 3, 3);
+        // GameSpace.Add(deleterBox);
+        // deleterBox.CollisionInformation.Events.InitialCollisionDetected += HandleCollision;
 
         //Go through the list of entities in the space and create a graphical representation for them.
         foreach (BEPUphysics.Entities.Entity e in GameSpace.Entities)
@@ -165,13 +180,6 @@ public class Game1 : Game
                 EntityModel model = new EntityModel(e, CubeModel, scaling, this);
                 //Add the drawable game component for this entity to the game.
                 Components.Add(model);
-                e.Tag = model; //set the object tag of this entity to the model so that it's easy to delete the graphics component later if the entity is removed.
-            }else if (e as Cylinder != null)
-            {
-                Cylinder cylinder = e as Cylinder;
-                EntityModel model = new EntityModel(e, CubeModel, Matrix.Identity, this);
-                Components.Add(model);
-
             }
         }
     }
@@ -199,6 +207,8 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
+        physicsSystem.Update(gameTime);
+        
         if (followCameraSystem != null)
         {
             followCameraSystem.Update(gameTime);
@@ -208,27 +218,6 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
         
-        
-        
-        // MouseState MouseState = Mouse.GetState();
-        // if (MouseState.LeftButton == ButtonState.Pressed)
-        // {
-        //     //If the user is clicking, start firing some boxes.
-        //     //First, create a new dynamic box at the camera's location.
-        //     Box toAdd = new Box(cameraComponent.Transform.Position, 1, 1, 1, 1);
-        //     //Set the velocity of the new box to fly in the direction the camera is pointing.
-        //     //Entities have a whole bunch of properties that can be read from and written to.
-        //     //Try looking around in the entity's available properties to get an idea of what is available.
-        //     toAdd.LinearVelocity = cameraComponent.Transform.Forward * 10;
-        //     //Add the new box to the simulation.
-        //     GameSpace.Add(toAdd);
-        //
-        //     //Add a graphical representation of the box to the drawable game components.
-        //     EntityModel model = new EntityModel(toAdd, CubeModel, Matrix.Identity, this);
-        //     Components.Add(model);
-        //     toAdd.Tag = model; //set the object tag of this entity to the model so that it's easy to delete the graphics component later if the entity is removed.
-        // }
-
         // Update the Space object in your game's update loop
         GameSpace.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
         base.Update(gameTime);
