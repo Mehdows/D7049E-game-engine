@@ -6,6 +6,7 @@ using ArenaGame.Ecs.Systems;
 using BEPUphysics;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
+using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using BEPUphysics.NarrowPhaseSystems.Pairs;
@@ -75,14 +76,14 @@ public class Game1 : Game
         EntityBuilder builder = new EntityBuilder()
             .AddTransformComponent(0,0,0)
             .AddMeshComponent("Models/FreeMale")
+            .AddCollisionComponent(new CapsuleShape(10f, 5f), new Vector3(30, 60, 30), "Player")
             .AddInputComponent();
         player = builder.Build();
-        
+
         builder = new EntityBuilder()
-            .AddTransformComponent(0,0,0)
-            .AddMeshComponent("Models/FreeMale")
-            .AddInputComponent();
-        player = builder.Build();
+            .AddTransformComponent(0, 0, 0)
+            .AddMeshComponent("Models/FreeMale");
+        enemy = builder.Build();
         
 
         // Create a new camera and add the PerspectiveCameraComponent to it with a transform
@@ -109,17 +110,31 @@ public class Game1 : Game
         
         CubeModel = Content.Load<Model>("Models/cube");
         // Call the load content for each MeshComponent in the component manager
-        foreach ((var entityId, var component) in ComponentManager.Instance.GetComponentArray(typeof(MeshComponent)).GetEntityComponents())
+        foreach (var (_, component) in ComponentManager.Instance.GetComponentArray(typeof(MeshComponent)).GetEntityComponents())
         {
-            TransformComponent transform =
-                (TransformComponent)EntityManager.Instance.GetEntity(entityId).GetComponent<TransformComponent>();
-            MeshComponent meshComponent = (MeshComponent) component;
+            var meshComponent = (MeshComponent) component;
             meshComponent.LoadContent(Content);
-            GameSpace.Add(meshComponent.Capsule);
-            Matrix scaling = Matrix.CreateScale(meshComponent.Capsule.Radius, meshComponent.Capsule.Length, meshComponent.Capsule.Radius);
-            Components.Add(new EntityModel(meshComponent.Capsule, CubeModel, scaling, this));
         }
-            
+
+        foreach (var (_, component) in ComponentManager.Instance.GetComponentArray(typeof(CollisionComponent)).GetEntityComponents())
+        {
+            var collisionComponent = (CollisionComponent) component;
+            GameSpace.Add(collisionComponent.CollisionEntity);
+            Matrix scaling;
+            if (collisionComponent.Shape is CapsuleShape cS)
+            {
+                scaling =  Matrix.CreateScale(cS.Radius , cS.Length , cS.Radius );
+            }else if (collisionComponent.Shape is BoxShape bS)
+            {
+                scaling = Matrix.CreateScale(bS.Width, bS.Height, bS.Length);
+            }
+            else
+            {
+                scaling = Matrix.Identity;
+            }
+            Components.Add(new EntityModel(collisionComponent.CollisionEntity, CubeModel, scaling, this));
+        }
+        
         // 3D
         // Model playerModel = Content.Load<Model>("Models/FreeMale");
         // MeshComponent playerMesh =(MeshComponent) player.AddComponent<MeshComponent>(new MeshComponent(playerModel));

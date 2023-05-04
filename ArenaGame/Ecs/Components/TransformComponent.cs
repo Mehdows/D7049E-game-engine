@@ -10,11 +10,7 @@ namespace ArenaGame;
 
 public class TransformComponent : IComponent 
 {
-    // public Vector3 Position { get; set; }
-    // public Quaternion Rotation { get; set; } = Quaternion.Identity;
-    // public Vector3 Scale { get; set; } = new Vector3(1,1,1);
-
-    // public Matrix RotationMatrix { get; set; }
+    public Vector3 Scale { get; set; } = new Vector3(1,1,1);
     
     internal Vector3 position;
     internal Quaternion orientation = Quaternion.Identity;

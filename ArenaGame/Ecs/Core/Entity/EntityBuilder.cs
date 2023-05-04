@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using ArenaGame.Ecs;
 using ArenaGame.Ecs.Components;
+using BEPUphysics.CollisionShapes.ConvexShapes;
+using BEPUutilities;
 
 namespace ArenaGame;
 
@@ -27,6 +29,13 @@ public class EntityBuilder
         MeshComponent meshComponent = new MeshComponent(meshName);
         entity.AddComponent(meshComponent);
         componentTypes.Add(typeof(MeshComponent));
+        return this;
+    }
+    
+    public EntityBuilder AddCollisionComponent(ConvexShape shape, Vector3 transformScale, string tag) {
+        CollisionComponent collisionComponent = new CollisionComponent(shape, transformScale, tag);
+        entity.AddComponent(collisionComponent);
+        componentTypes.Add(typeof(CollisionComponent));
         return this;
     }
     

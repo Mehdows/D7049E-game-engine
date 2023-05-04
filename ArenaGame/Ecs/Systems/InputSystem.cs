@@ -23,7 +23,7 @@ public class InputSystem: ISystem
         Entity player3D = EntityManager.Instance.GetEntitiesWithArchetype(playerArchetype)[0];
         TransformComponent transform = (TransformComponent)player3D.GetComponent<TransformComponent>();
         InputComponent input = (InputComponent)player3D.GetComponent<InputComponent>();
-        MeshComponent mesh = (MeshComponent)player3D.GetComponent<MeshComponent>();
+        var collision = (CollisionComponent)player3D.GetComponent<CollisionComponent>();
 
         input.Update(gameTime);
         
@@ -81,19 +81,19 @@ public class InputSystem: ISystem
         if (!input.IsKeyHeld(InputKey.Left) && !input.IsKeyHeld(InputKey.Right) && !input.IsKeyHeld(InputKey.Up) && !input.IsKeyHeld(InputKey.Down))
         {
             // Lerp the linear velocity to zero
-            if (mesh.Capsule.LinearVelocity.LengthSquared() < 0.1f)
+            if (collision.CollisionEntity.LinearVelocity.LengthSquared() < 0.1f)
             {
-                mesh.Capsule.LinearVelocity = new Vector3(0, mesh.Capsule.LinearVelocity.Y, 0);
+                collision.CollisionEntity.LinearVelocity = new Vector3(0, collision.CollisionEntity.LinearVelocity.Y, 0);
             }
             else
-                mesh.Capsule.LinearVelocity = Vector3.Lerp(mesh.Capsule.LinearVelocity, new Vector3(0, mesh.Capsule.LinearVelocity.Y, 0), 0.1f);
+                collision.CollisionEntity.LinearVelocity = Vector3.Lerp(collision.CollisionEntity.LinearVelocity, new Vector3(0, collision.CollisionEntity.LinearVelocity.Y, 0), 0.1f);
             
         }
         
-        transform.WorldTransform = mesh.Capsule.WorldTransform;
+        transform.WorldTransform = collision.CollisionEntity.WorldTransform;
         Vector3 newVelocity = Accelerate(movementDirection, speed);
-        mesh.Capsule.LinearVelocity = new Vector3(newVelocity.X, mesh.Capsule.LinearVelocity.Y, newVelocity.Z);
-        transform.WorldTransform = mesh.Capsule.WorldTransform;
+        collision.CollisionEntity.LinearVelocity = new Vector3(newVelocity.X, collision.CollisionEntity.LinearVelocity.Y, newVelocity.Z);
+        transform.WorldTransform = collision.CollisionEntity.WorldTransform;
         transform.Orientation = Rotate(transform, movementDirection);
     }
     
@@ -102,7 +102,7 @@ public class InputSystem: ISystem
         PlayerArchetype playerArchetype = (PlayerArchetype)ArchetypeFactory.GetArchetype(EArchetype.Player);
         Entity player = EntityManager.Instance.GetEntitiesWithArchetype(playerArchetype)[0];
         // Get the current velocity
-        Vector3 velocity = ((MeshComponent)player.GetComponent<MeshComponent>()).Capsule.LinearVelocity;
+        Vector3 velocity = ((CollisionComponent)player.GetComponent<CollisionComponent>()).CollisionEntity.LinearVelocity;
         
         // Calculate the new velocity
         Vector3 newVelocity = velocity + (direction * speed); 

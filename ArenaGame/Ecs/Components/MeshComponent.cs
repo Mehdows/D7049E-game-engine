@@ -13,8 +13,6 @@ namespace ArenaGame.Ecs.Components;
 public class MeshComponent : IComponent
 {
     private readonly String modelPath;
-    public Matrix Transform;
-    public Capsule Capsule { get; set; }
     public Model Model { get; set; }
 
     public MeshComponent(String modelPath) 
@@ -25,12 +23,6 @@ public class MeshComponent : IComponent
     // TODO Ändra så att Capsule inte är hårdkodad
     public new void LoadContent(ContentManager contentManager)
     {
-        Capsule = new Capsule(new Vector3(0, 20, 0), 10f, 5f, 10f);
-        Capsule.Tag = "Player";
-        Capsule.AngularDamping = 0f;
-        Capsule.LocalInertiaTensorInverse = new Matrix3x3(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0.0f);
-        Capsule.Gravity = new Vector3(0, -150.82f, 0);
-        Transform =  Matrix.CreateScale(Capsule.Radius/30, Capsule.Length/110, Capsule.Radius/30);
         Model = contentManager.Load<Model>(modelPath);
         
     }

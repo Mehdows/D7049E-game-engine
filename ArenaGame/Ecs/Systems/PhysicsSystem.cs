@@ -20,11 +20,11 @@ public class PhysicsSystem: ISystem
     }
     public void Update(GameTime gameTime)
     {
-        var entities = ComponentManager.Instance.GetComponentArray(typeof(MeshComponent)).GetEntityComponents();
-        foreach ((int entityID, IComponent component) in entities)
+        var entities = ComponentManager.Instance.GetComponentArray(typeof(CollisionComponent)).GetEntityComponents();
+        foreach (var ( _, component) in entities)
         {
-            MeshComponent meshComponent = (MeshComponent)component;
-            meshComponent.Capsule.CollisionInformation.Events.InitialCollisionDetected += HandleCollision;
+            var collsiionComponent = (CollisionComponent)component;
+            collsiionComponent.CollisionEntity.CollisionInformation.Events.InitialCollisionDetected += HandleCollision;
         }
     }
 

@@ -27,13 +27,22 @@ public class RenderingSystem2 : ISystem
         foreach (var (entityID, component) in meshComponentArray.GetEntityComponents())
         {
             var entity = EntityManager.Instance.GetEntity(entityID);
+            var collision = (CollisionComponent)entity.GetComponent<CollisionComponent>();
             MeshComponent meshComponent = (MeshComponent)component;
-            TransformComponent transform = (TransformComponent)entity.GetComponent<TransformComponent>();
-            // Matrix worldMatrix = Matrix.CreateScale(transform.Scale) *
-            //                      Matrix.CreateFromQuaternion(transform.Rotation) *
-            //                      Matrix.CreateTranslation(transform.Position);
             
-            Matrix worldMatrix = meshComponent.Transform * transform.WorldTransform;
+            TransformComponent transform = (TransformComponent)entity.GetComponent<TransformComponent>();
+            
+            Matrix worldMatrix;
+            if(collision != null)
+                 worldMatrix = collision.Transform *
+                                     Matrix.CreateFromQuaternion(transform.Orientation) *
+                                     Matrix.CreateTranslation(collision.CollisionEntity.WorldTransform.Translation);
+            else
+            {
+                 worldMatrix = Matrix.CreateScale(transform.Scale) *
+                                     Matrix.CreateFromQuaternion(transform.Orientation) *
+                                     Matrix.CreateTranslation(transform.WorldTransform.Translation);
+            }
             foreach (ModelMesh mesh in meshComponent.Model.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
