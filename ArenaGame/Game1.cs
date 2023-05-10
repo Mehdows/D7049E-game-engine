@@ -22,8 +22,8 @@ public class Game1 : Game
     private List<SoundEffect> _soundEffects;
 
     // 2D
-    private SpriteBatch spriteBatch;
-    private Entity player; 
+    //private SpriteBatch spriteBatch;
+    //private Entity player; 
     
     private PlayerControllerSystem playerControllerSystem;
 
@@ -52,9 +52,9 @@ public class Game1 : Game
     protected override void Initialize()
     {
         // 2D
-        PlayerArchetype playerArchetype = ArchetypeFactory.GetArchetype(EArchetype.Player) as PlayerArchetype;
+        /*PlayerArchetype playerArchetype = ArchetypeFactory.GetArchetype(EArchetype.Player) as PlayerArchetype;
         player = entityManager.CreateEntityWithArchetype(playerArchetype);
-        playerControllerSystem = new PlayerControllerSystem();
+        playerControllerSystem = new PlayerControllerSystem();*/
 
         // 3D
         Player3DArchetype player3DArchetype = ArchetypeFactory.GetArchetype(EArchetype.Player3D) as Player3DArchetype;
@@ -74,13 +74,16 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         // 2D
-        Texture2D playerTexture = Content.Load<Texture2D>("Sprites/player");
-        player.AddComponent<SpriteComponent>(new SpriteComponent(playerTexture));
-        spriteBatch = new SpriteBatch(GraphicsDevice);
+        //Texture2D playerTexture = Content.Load<Texture2D>("Sprites/player");
+        //player.AddComponent<SpriteComponent>(new SpriteComponent(playerTexture));
+        //spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // 3D
-        Model model = Content.Load<Model>("Models/FreeMale");
+        Model model = Content.Load<Model>("Models/player_character");
         player3D.AddComponent<MeshComponent>(new MeshComponent(model));
+
+        Model environment = Content.Load<Model>("Models/environment");
+
     }
 
     protected override void Update(GameTime gameTime)
