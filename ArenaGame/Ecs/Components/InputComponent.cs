@@ -58,5 +58,6 @@ public enum InputKey
     Left = Keys.A,
     Right = Keys.D,
     Jump = Keys.Space,
-    Attack = Keys.Enter
+    Attack = Keys.Enter,
+    FullScreen = Keys.F11
 }

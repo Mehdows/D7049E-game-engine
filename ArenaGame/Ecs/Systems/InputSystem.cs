@@ -7,6 +7,13 @@ namespace ArenaGame.Ecs.Systems;
 // For 3D, see PlayerControllerSystem for 2D
 public class InputSystem: ISystem
 {
+    private GraphicsDeviceManager graphicsDeviceManager;
+
+    public InputSystem(GraphicsDeviceManager graphicsDeviceManager)
+    {
+        this.graphicsDeviceManager = graphicsDeviceManager;
+    }
+
     public void Update(GameTime gameTime)
     {
         Player3DArchetype player3DArchetype = (Player3DArchetype)ArchetypeFactory.GetArchetype(EArchetype.Player3D);
@@ -35,6 +42,11 @@ public class InputSystem: ISystem
         {
             transform.Position += new Vector3(0f, -5f, 0f);
             transform.Rotation = Quaternion.CreateFromAxisAngle(transform.Forward, MathHelper.ToRadians(180));
+        }
+
+        if (input.IsKeyPressed(InputKey.FullScreen))
+        {
+            graphicsDeviceManager.ToggleFullScreen();
         }
     }
 }

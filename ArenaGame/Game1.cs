@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ArenaGame.Ecs;
 using ArenaGame.Ecs.Archetypes;
 using ArenaGame.Ecs.Components;
@@ -36,8 +37,8 @@ public class Game1 : Game
     public Game1()
     {
         graphics = new GraphicsDeviceManager(this);
-        graphics.PreferredBackBufferWidth = 1920;  
-        graphics.PreferredBackBufferHeight = 1080; 
+        graphics.PreferredBackBufferWidth = (int)Math.Round(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width * 0.8f, 0);
+        graphics.PreferredBackBufferHeight = (int)Math.Round(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height * 0.8f, 0);
         graphics.ApplyChanges();
         
         Content.RootDirectory = "Content";
@@ -65,7 +66,7 @@ public class Game1 : Game
         cameraComponent.LookAt(Vector3.Zero);
         renderingSystem = new RenderingSystem(cameraComponent);
 
-        inputSystem = new InputSystem();
+        inputSystem = new InputSystem(graphics);
 
         base.Initialize();
     }
@@ -77,7 +78,7 @@ public class Game1 : Game
         player.AddComponent<SpriteComponent>(new SpriteComponent(playerTexture));
         spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // 3D
+        // 3D
         Model model = Content.Load<Model>("Models/FreeMale");
         player3D.AddComponent<MeshComponent>(new MeshComponent(model));
     }
