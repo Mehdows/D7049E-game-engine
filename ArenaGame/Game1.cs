@@ -78,7 +78,7 @@ public class Game1 : Game
         spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // 3D
-        Model model = Content.Load<Model>("Models/player_character");
+        Model model = Content.Load<Model>("Models/sword");
         player3D.AddComponent<MeshComponent>(new MeshComponent(model));
     }
 
