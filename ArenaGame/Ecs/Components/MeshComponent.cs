@@ -1,4 +1,5 @@
 ﻿using System;
+using BEPUutilities;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -9,12 +10,19 @@ public class MeshComponent : IComponent
     private readonly String modelPath;
     public Model Model { get; set; }
 
+    public Vector3 localOffset { get; set; }
+    
+    public MeshComponent(String modelPath, Vector3 localOffset) 
+    {
+        this.modelPath = modelPath;
+        this.localOffset = localOffset;
+    }
     public MeshComponent(String modelPath) 
     {
         this.modelPath = modelPath;
+        this.localOffset = Vector3.Zero;
     }
 
-    // TODO Ändra så att Capsule inte är hårdkodad
     public new void LoadContent(ContentManager contentManager)
     {
         Model = contentManager.Load<Model>(modelPath);

@@ -33,11 +33,19 @@ public class PhysicsSystem: ISystem
 
         if (other is EntityCollidable otherEntity )
         {
-            if (otherEntity.Entity.Tag is string tag && tag == "Enemy")
+            if (sender.Entity.Tag is "Weapon")
             {
-                Console.WriteLine($"{otherEntity.Entity}");
+                // Console.WriteLine($"{sender.Entity}");
+                if (otherEntity.Entity.Tag is string tag && tag == "Enemy")
+                {
+               
+                    // Console.WriteLine($"{otherEntity.Entity}");
+                    Console.WriteLine($"ENEMY HIT");
+                
+                }
                 
             }
+            
             
         }
     }

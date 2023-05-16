@@ -13,7 +13,7 @@ public class  CollisionComponent: IComponent
     public ConvexShape Shape { get; set; }
     public CollisionShape CollisionEntity { get; set; } 
 
-    public CollisionComponent(Vector3 startPosition, ConvexShape shape, Vector3 transformScale, string tag)
+    public CollisionComponent(Vector3 startPosition, ConvexShape shape, Vector3 transformScale, string tag, float gravity)
     {
         // new Capsule(new Vector3(0,20,20),10,2,3);
         Shape = shape;
@@ -21,7 +21,7 @@ public class  CollisionComponent: IComponent
         CollisionEntity.Tag = tag;
         CollisionEntity.AngularDamping = 0f;
         CollisionEntity.LocalInertiaTensorInverse = new Matrix3x3(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0.0f);
-        CollisionEntity.Gravity = new Vector3(0, -150.82f, 0);
+        CollisionEntity.Gravity = new Vector3(0,gravity * 10, 0);
         if (Shape as CapsuleShape != null)
         {
             Transform =  Matrix.CreateScale(((CapsuleShape)Shape).Radius / transformScale.X, ((CapsuleShape)Shape).Length / transformScale.Y, ((CapsuleShape)Shape).Radius / transformScale.Z);

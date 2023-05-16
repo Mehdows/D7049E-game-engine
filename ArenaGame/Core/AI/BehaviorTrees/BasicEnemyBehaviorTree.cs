@@ -93,7 +93,7 @@ public class BasicEnemyBehaviorTree
     private bool IsPlayerInRange()
     {
         float distance = Vector3.Distance(enemyTransform.position, ((TransformComponent)playerEntity.GetComponent<TransformComponent>()).position);
-        Console.WriteLine($"AI: Distance to player -> {distance}");
+        // Console.WriteLine($"AI: Distance to player -> {distance}");
         
         return distance <= detectionRange;
     }

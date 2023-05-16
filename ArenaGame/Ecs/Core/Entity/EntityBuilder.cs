@@ -31,15 +31,29 @@ public class EntityBuilder
         return this;
     }
     
+    public EntityBuilder AddMeshComponent(string meshName, Vector3 localOffset) {
+        MeshComponent meshComponent = new MeshComponent(meshName, localOffset);
+        entity.AddComponent(meshComponent);
+        componentTypes.Add(typeof(MeshComponent));
+        return this;
+    }
     public EntityBuilder AddMeshComponent(string meshName) {
         MeshComponent meshComponent = new MeshComponent(meshName);
         entity.AddComponent(meshComponent);
         componentTypes.Add(typeof(MeshComponent));
         return this;
     }
+
+    public EntityBuilder AddWeaponComponent(Entity weapon, float radius, float rotationSpeed)
+    {
+        WeaponComponent weaponComponent = new WeaponComponent(weapon, radius, rotationSpeed);
+        entity.AddComponent(weaponComponent);
+        componentTypes.Add(typeof(WeaponComponent));
+        return this;
+    }
     
-    public EntityBuilder AddCollisionComponent(Vector3 startPosition,ConvexShape shape, Vector3 transformScale, string tag) {
-        CollisionComponent collisionComponent = new CollisionComponent(startPosition, shape, transformScale, tag);
+    public EntityBuilder AddCollisionComponent(Vector3 startPosition,ConvexShape shape, Vector3 transformScale, string tag, float gravity) {
+        CollisionComponent collisionComponent = new CollisionComponent(startPosition, shape, transformScale, tag, gravity);
         entity.AddComponent(collisionComponent);
         componentTypes.Add(typeof(CollisionComponent));
         return this;

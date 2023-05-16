@@ -17,6 +17,13 @@ public class InputSystem: ISystem
 
     private Vector3 movementDirection;
     
+    private GraphicsDeviceManager graphicsDeviceManager;
+
+    public InputSystem(GraphicsDeviceManager graphicsDeviceManager)
+    {
+        this.graphicsDeviceManager = graphicsDeviceManager;
+    }
+    
     public void Update(GameTime gameTime)
     {
         PlayerArchetype playerArchetype = (PlayerArchetype)ArchetypeFactory.GetArchetype(EArchetype.Player);
@@ -90,6 +97,11 @@ public class InputSystem: ISystem
             
         }
         
+        if (input.IsKeyPressed(InputKey.FullScreen))
+        {
+            graphicsDeviceManager.ToggleFullScreen();
+        }
+        
         transform.WorldTransform = collision.CollisionEntity.WorldTransform;
         Vector3 newVelocity = Accelerate(movementDirection, speed);
         collision.CollisionEntity.LinearVelocity = new Vector3(newVelocity.X, collision.CollisionEntity.LinearVelocity.Y, newVelocity.Z);
@@ -117,7 +129,7 @@ public class InputSystem: ISystem
         if (Vector3.Dot(direction, velocity) < 0 && Math.Abs(velocity.Length()) > 0.1f)
         {
             Vector3 brakingForce = velocity * brakeSpeed;
-            Console.Out.WriteLine($"Braking force {brakingForce} ");
+            // Console.Out.WriteLine($"Braking force {brakingForce} ");
             newVelocity -= brakingForce;
         }
         

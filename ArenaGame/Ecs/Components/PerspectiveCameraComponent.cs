@@ -50,8 +50,7 @@ public class PerspectiveCameraComponent : IComponent
 
     public void UpdateViewMatrix()
     {
-        // ViewMatrix = Matrix.CreateLookAtRH(Transform.Position, Target.Position, Vector3.Up);
-        ViewMatrix = Matrix.CreateLookAtRH(new Vector3(Transform.Position.X, 40f, Transform.Position.Z), Target.Position, Vector3.Up);
+        ViewMatrix = Matrix.CreateLookAtRH(new Vector3(Transform.Position.X, 400f, Transform.Position.Z), Target.Position, Vector3.Up);
     }
 
     public void UpdateProjectionMatrix()
