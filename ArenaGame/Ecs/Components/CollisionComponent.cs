@@ -11,7 +11,8 @@ public class  CollisionComponent: IComponent
 {
     public Matrix Transform;
     public ConvexShape Shape { get; set; }
-    public CollisionShape CollisionEntity { get; set; } 
+    public CollisionShape CollisionEntity { get; set; }
+    public bool isVisible { get; set; } = false;
 
     public CollisionComponent(Vector3 startPosition, ConvexShape shape, Vector3 transformScale, string tag, float gravity)
     {

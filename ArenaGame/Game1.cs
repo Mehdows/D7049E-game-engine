@@ -151,6 +151,9 @@ public class Game1 : Game
         {
             var collisionComponent = (CollisionComponent) component;
             GameSpace.Add(collisionComponent.CollisionEntity);
+
+            if (!collisionComponent.isVisible) { continue; }
+
             Matrix scaling;
             if (collisionComponent.Shape is CapsuleShape cS)
             {
@@ -214,15 +217,21 @@ public class Game1 : Game
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
-        
-        // 2D
-        spriteBatch.Begin();
-        spriteBatch.DrawString(spriteFont, "FPS: " + framesPerSecond, new Vector2(10f, 10f), Color.White);
-        spriteBatch.DrawString(spriteFont, "Memory Usage: " + memoryUsage.ToString("0.00") + " MB", new Vector2(10f, 30f), Color.White);
-        spriteBatch.End();
-        
+
         // 3D
         renderingSystem.Draw(gameTime);
+
+        // Disable depth buffering
+        GraphicsDevice.DepthStencilState = DepthStencilState.None;
+
+        // 2D
+        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone);
+        spriteBatch.DrawString(spriteFont, "FPS: " + framesPerSecond, new Microsoft.Xna.Framework.Vector2(10f, 10f), Color.White);
+        spriteBatch.DrawString(spriteFont, "Memory Usage: " + memoryUsage.ToString("0.00") + " MB", new Microsoft.Xna.Framework.Vector2(10f, 30f), Color.White);
+        spriteBatch.End();
+
+        // Re-enable depth buffering
+        GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
         base.Draw(gameTime);
     }
