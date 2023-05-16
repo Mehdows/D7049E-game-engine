@@ -30,10 +30,13 @@ public class Game1 : Game
 
     // 3D rendering
     private Entity player3D;
+    private Entity sword;
     private CameraComponent cameraComponent;
     
     private RenderingSystem renderingSystem;
     private InputSystem inputSystem;
+    private WeaponSystem weaponSystem;
+    private SpawnerSystem spawnerSystem;
 
     private AudioSystem audioSystem;
 
@@ -63,6 +66,9 @@ public class Game1 : Game
         Player3DArchetype player3DArchetype = ArchetypeFactory.GetArchetype(EArchetype.Player3D) as Player3DArchetype;
         player3D = entityManager.CreateEntityWithArchetype(player3DArchetype);
 
+        WeaponArchetype weaponArchetype = ArchetypeFactory.GetArchetype(EArchetype.Weapon) as WeaponArchetype;
+        sword = entityManager.CreateEntityWithArchetype(weaponArchetype);
+
         TransformComponent cameraTransform = new TransformComponent();
         cameraTransform.Position = new Vector3(0f, 0f, -500f);
         cameraComponent = new CameraComponent(cameraTransform);
@@ -70,6 +76,8 @@ public class Game1 : Game
         renderingSystem = new RenderingSystem(cameraComponent);
 
         inputSystem = new InputSystem(graphics);
+        weaponSystem = new WeaponSystem();
+        spawnerSystem = new SpawnerSystem();
 
         audioSystem = new AudioSystem();
 
@@ -86,6 +94,9 @@ public class Game1 : Game
         // 3D
         Model model = Content.Load<Model>("Models/player_character");
         player3D.AddComponent<MeshComponent>(new MeshComponent(model));
+
+        Model swordMesh = Content.Load<Model>("Models/sword");
+        sword.AddComponent<MeshComponent>(new MeshComponent(swordMesh));
 
         Model environment = Content.Load<Model>("Models/environment");
 
@@ -105,6 +116,8 @@ public class Game1 : Game
 
         // 3D
         inputSystem.Update(gameTime);
+        weaponSystem.Update(gameTime);
+        spawnerSystem.Update(gameTime);
 
         audioSystem.Update(gameTime);
 
