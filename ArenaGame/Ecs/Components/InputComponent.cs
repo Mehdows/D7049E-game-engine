@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using ArenaGame;
 using ArenaGame.Ecs.Components;
-using BEPUphysics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using GameComponent = Microsoft.Xna.Framework.GameComponent;
 
 public class InputComponent : IComponent
 {
@@ -66,4 +63,8 @@ public enum InputKey
     Jump = Keys.Space,
     Attack = Keys.Enter,
     FullScreen = Keys.F11
+
+    //Mute = Keys.M
+    //Increase_volume = Keys.+
+    //Decrease_volume = Keys.-
 }
