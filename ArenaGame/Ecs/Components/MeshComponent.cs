@@ -14,7 +14,6 @@ public class MeshComponent : IComponent
         this.modelPath = modelPath;
     }
 
-    // TODO Ändra så att Capsule inte är hårdkodad
     public new void LoadContent(ContentManager contentManager)
     {
         Model = contentManager.Load<Model>(modelPath);

@@ -36,22 +36,17 @@ public class Game1 : Game
     
     private List<SoundEffect> _soundEffects;
 
-    // 2D
-    //private SpriteBatch spriteBatch;
-    //private Entity player; 
     
-    private PlayerControllerSystem playerControllerSystem;
+    // private PlayerControllerSystem playerControllerSystem;
 
-    // 3D rendering
     private Entity player;
     private Entity enemy;
     private TransformComponent playerTransform;
     private Entity sword;
-    private CameraComponent cameraComponent;
+    private PerspectiveCameraComponent cameraComponent;
     
     private Entity camera;
-    // private RenderingSystem renderingSystem;
-    private RenderingSystem2 renderingSystem;
+    private RenderingSystem renderingSystem;
     private InputSystem inputSystem;
     private WeaponSystem weaponSystem;
     private SpawnerSystem spawnerSystem;
@@ -60,10 +55,8 @@ public class Game1 : Game
     private AISystem aiSystem;
     private Model model;
 
-    // Physics
     public Model CubeModel;
-    public Model PlaygroundModel;
-    internal Space GameSpace { get; set; }
+    private Space GameSpace { get; set; }
     private BEPUphysics.Entities.Entity entity;
 
     public Game1()
@@ -85,23 +78,24 @@ public class Game1 : Game
     {
         GameSpace = new Space();
         GameSpace.ForceUpdater.Gravity = new Vector3(0, -9.81f, 0);
+        
         // 3D
         EntityBuilder builder = new EntityBuilder()
             .AddTransformComponent()
-            .AddMeshComponent("Models/FreeMale")
-            .AddCollisionComponent(new Vector3(30,30,0),new CapsuleShape(10f, 5f), new Vector3(30, 60, 30), "Player")
+            .AddMeshComponent("Models/player_character")
+            .AddCollisionComponent(new Vector3(30,30,0),new CapsuleShape(10f, 5f), new Vector3(20, 50, 20), "Player")
             .AddInputComponent();
         player = builder.Build();
 
         builder = new EntityBuilder()
             .AddTransformComponent()
-            .AddMeshComponent("Models/FreeMale")
-            .AddCollisionComponent(new Vector3(10, 30, 0), new CapsuleShape(10f, 5f), new Vector3(30, 60, 30), "Enemy")
+            .AddMeshComponent("Models/enemy_character")
+            .AddCollisionComponent(new Vector3(10, 30, 0), new CapsuleShape(10f, 5f), new Vector3(20, 50, 20), "Enemy")
             .AddAIControllerComponent(EnemyType.Basic);
         enemy = builder.Build();
         
-        WeaponArchetype weaponArchetype = ArchetypeFactory.GetArchetype(EArchetype.Weapon) as WeaponArchetype;
-        sword = entityManager.CreateEntityWithArchetype(weaponArchetype);
+        // WeaponArchetype weaponArchetype = ArchetypeFactory.GetArchetype(EArchetype.Weapon) as WeaponArchetype;
+        // sword = entityManager.CreateEntityWithArchetype(weaponArchetype);
 
 
         // Create a new camera and add the PerspectiveCameraComponent to it with a transform
@@ -115,13 +109,11 @@ public class Game1 : Game
             .LookAt((TransformComponent)player.GetComponent<TransformComponent>());
         
         
-        renderingSystem = new RenderingSystem2(camera);
-        inputSystem = new InputSystem();
+        renderingSystem = new RenderingSystem(camera);
+        inputSystem = new InputSystem(graphics);
         followCameraSystem = new FollowCameraSystem(player, camera);
         physicsSystem = new PhysicsSystem(GameSpace, this);
         aiSystem = new AISystem();
-        
-        // inputSystem = new InputSystem(graphics);
         weaponSystem = new WeaponSystem();
         spawnerSystem = new SpawnerSystem();
 
@@ -130,6 +122,14 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
+        
+        // Model model = Content.Load<Model>("Models/player_character");
+        // player3D.AddComponent<MeshComponent>(new MeshComponent(model));
+
+        // Model swordMesh = Content.Load<Model>("Models/sword");
+        // sword.AddComponent<MeshComponent>(new MeshComponent(swordMesh));
+
+        // Model environment = Content.Load<Model>("Models/environment");
         
         CubeModel = Content.Load<Model>("Models/cube");
         // Call the load content for each MeshComponent in the component manager
@@ -158,55 +158,11 @@ public class Game1 : Game
             Components.Add(new EntityModel(collisionComponent.CollisionEntity, CubeModel, scaling, this));
         }
         
-        // 3D
-        // Model playerModel = Content.Load<Model>("Models/FreeMale");
-        // MeshComponent playerMesh =(MeshComponent) player.AddComponent<MeshComponent>(new MeshComponent(playerModel));
 
         // Physics
-        PlaygroundModel = Content.Load<Model>("Models/playground");
         Box ground = new Box(Vector3.Zero, 500, 1, 500);
         GameSpace.Add(ground);
         
-        // Box Enemy1 = new Box(new Vector3(0, 10, 0), 5, 5, 5, 1);
-        // Box Enemy2 = new Box(new Vector3(0, 15, 0), 5, 5, 5, 1);
-        // Box Enemy3 = new Box(new Vector3(0, 20, 0), 5, 5, 5, 1);
-        // GameSpace.Add(Enemy1);
-        // GameSpace.Add(Enemy2);
-        // GameSpace.Add(Enemy3);
-        // Enemy1.Tag = "Enemy";
-        // Enemy2.Tag = "Enemy";
-        // Enemy3.Tag = "Enemy";
-        
-        // //Now that we have something to fall on, make a few more boxes.
-        // //These need to be dynamic, so give them a mass- in this case, 1 will be fine.
-        // GameSpace.Add(new Box(new Vector3(0, 4, 0), 5, 5, 5, 1));
-        // GameSpace.Add(new Box(new Vector3(0, 8, 0), 5, 5, 5, 1));
-        // GameSpace.Add(new Box(new Vector3(0, 12, 0), 5, 5, 5, 1));
-
-        //Create a physical environment from a triangle mesh.
-        //First, collect the the mesh data from the model using a helper function.
-        //This special kind of vertex inherits from the TriangleMeshVertex and optionally includes
-        //friction/bounciness data.
-        //The StaticTriangleGroup requires that this special vertex type is used in lieu of a normal TriangleMeshVertex array.
-        Vector3[] vertices;
-        int[] indices;
-        ModelDataExtractor.GetVerticesAndIndicesFromModel(PlaygroundModel, out vertices, out indices);
-        //Give the mesh information to a new StaticMesh.  
-        //Give it a transformation which scoots it down below the kinematic box entity we created earlier.
-        var mesh = new StaticMesh(vertices, indices, new AffineTransform(new Vector3(0, -10, 0)));
-
-        //Add it to the space!
-        GameSpace.Add(mesh);
-        // Make it visible too
-        Components.Add(new StaticModelComponent(PlaygroundModel, mesh.WorldTransform.Matrix));
-
-        // //Hook an event handler to an entity to handle some game logic.
-        // //Refer to the Entity Events documentation for more information.
-        // Box deleterBox = new Box(new Vector3(5, 2, 0), 3, 3, 3);
-        // GameSpace.Add(deleterBox);
-        // deleterBox.CollisionInformation.Events.InitialCollisionDetected += HandleCollision;
-
-        //Go through the list of entities in the space and create a graphical representation for them.
         foreach (BEPUphysics.Entities.Entity e in GameSpace.Entities)
         {
             if (e as Box != null)
@@ -220,36 +176,6 @@ public class Game1 : Game
                 Components.Add(model);
             }
         }
-    }
-
-    /// <summary>
-    /// Used to handle a collision event triggered by an entity specified above.
-    /// </summary>
-    /// <param name="sender">Entity that had an event hooked.</param>
-    /// <param name="other">Entity causing the event to be triggered.</param>
-    /// <param name="pair">Collision pair between the two objects in the event.</param>
-    void HandleCollision(EntityCollidable sender, Collidable other, CollidablePairHandler pair)
-    {
-        //This type of event can occur when an entity hits any other object which can be collided with.
-        //They aren't always entities; for example, hitting a StaticMesh would trigger this.
-        //Entities use EntityCollidables as collision proxies; see if the thing we hit is one.
-        // var otherEntityInformation = other as EntityCollidable;
-        // if (otherEntityInformation != null)
-        // {
-        //     //We hit an entity! remove it.
-        //     GameSpace.Remove(otherEntityInformation.Entity);
-        //     //Remove the graphics too.
-        //     Components.Remove((EntityModel)otherEntityInformation.Entity.Tag);
-        // }
-        // 3D
-        Model model = Content.Load<Model>("Models/player_character");
-        player3D.AddComponent<MeshComponent>(new MeshComponent(model));
-
-        Model swordMesh = Content.Load<Model>("Models/sword");
-        sword.AddComponent<MeshComponent>(new MeshComponent(swordMesh));
-
-        Model environment = Content.Load<Model>("Models/environment");
-
     }
 
     protected override void Update(GameTime gameTime)
@@ -277,18 +203,8 @@ public class Game1 : Game
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
-
-        // 2D
-        /*
-        spriteBatch.Begin();
-        spriteBatch.Draw(
-            ((SpriteComponent)player.GetComponent<SpriteComponent>()).Texture,
-            ((PositionComponent)player.GetComponent<PositionComponent>()).Position, Color.White);
-        spriteBatch.End();
-        */
-
-        // 3D
-        renderingSystem.Draw();
+        
+        renderingSystem.Draw(gameTime);
 
         base.Draw(gameTime);
     }

@@ -22,7 +22,6 @@ public class AISystem: ISystem
             AIControllerComponent aiControllerComponent = (AIControllerComponent) component;
             Entity entity = EntityManager.Instance.GetEntity(entityID);
             enemyEntities.Add(entity);
-            TransformComponent transformComponent = (TransformComponent) entity.GetComponent<TransformComponent>();
             switch (aiControllerComponent.EnemyType)
             {
                 case EnemyType.Basic:

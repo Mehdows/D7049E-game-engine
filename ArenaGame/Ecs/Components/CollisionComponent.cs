@@ -24,7 +24,7 @@ public class  CollisionComponent: IComponent
         CollisionEntity.Gravity = new Vector3(0, -150.82f, 0);
         if (Shape as CapsuleShape != null)
         {
-            Transform =  Matrix.CreateScale(((CapsuleShape)Shape).Radius / transformScale.X, ((CapsuleShape)Shape).Length / transformScale.Y, ((CapsuleShape)Shape).Radius / transformScale.Z);
+            Transform =  Matrix.CreateScale(((CapsuleShape)Shape).Radius / transformScale.X, ((CapsuleShape)Shape).Length / transformScale.Y , ((CapsuleShape)Shape).Radius / transformScale.Z);
         }else if (Shape as BoxShape != null)
         {
             Transform =  Matrix.CreateScale(((BoxShape)Shape).Width / transformScale.X, ((BoxShape)Shape).Height / transformScale.Y, ((BoxShape)Shape).Length / transformScale.Z);

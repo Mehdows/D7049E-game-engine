@@ -23,13 +23,15 @@ public class BasicEnemyBehaviorTree
     float maxSpeed = 300;
     float brakeSpeed = 0.05f;
 
-    // private Vector3 movementDirection;
 
     public BasicEnemyBehaviorTree(Entity ai, Entity player, float range)
     {
         aiEntity = ai;
         playerEntity = player;
         detectionRange = range;
+        
+        enemyTransform = (TransformComponent)aiEntity.GetComponent<TransformComponent>();
+        enemyCollision = (CollisionComponent)aiEntity.GetComponent<CollisionComponent>();
 
         rootSelector = new SelectorNode();
         
@@ -40,11 +42,6 @@ public class BasicEnemyBehaviorTree
         rootSelector.AddChildNode(followPlayerCondition);
         rootSelector.AddChildNode(followPlayerAction);
         rootSelector.AddChildNode(randomWalkAction);
-        
-        
-        enemyTransform = (TransformComponent)aiEntity.GetComponent<TransformComponent>();
-        enemyCollision = (CollisionComponent)aiEntity.GetComponent<CollisionComponent>();
-
         
     }
     
@@ -85,14 +82,14 @@ public class BasicEnemyBehaviorTree
 
     private void Log(string message)
     {
-        // You can replace this with your own logging implementation
         Console.WriteLine(message);
     }
 
     
     private bool IsPlayerInRange()
     {
-        float distance = Vector3.Distance(enemyTransform.position, ((TransformComponent)playerEntity.GetComponent<TransformComponent>()).position);
+        var target = ((TransformComponent) playerEntity.GetComponent<TransformComponent>()).Position;
+        float distance = Vector3.Distance(enemyTransform.Position, target);
         Console.WriteLine($"AI: Distance to player -> {distance}");
         
         return distance <= detectionRange;
@@ -102,14 +99,12 @@ public class BasicEnemyBehaviorTree
     {
         Vector3 direction = ((TransformComponent)playerEntity.GetComponent<TransformComponent>()).position - enemyTransform.position;
         direction.Normalize();
-        // var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        // enemyTransform.position += direction * delta;
         
-        enemyTransform.WorldTransform = enemyCollision.CollisionEntity.WorldTransform;
-        Vector3 newVelocity = Accelerate(direction, speed);
-        enemyCollision.CollisionEntity.LinearVelocity = new Vector3(newVelocity.X, enemyCollision.CollisionEntity.LinearVelocity.Y, newVelocity.Z);
-        enemyTransform.WorldTransform = enemyCollision.CollisionEntity.WorldTransform;
-        enemyTransform.Orientation = Rotate(enemyTransform, direction);
+        // enemyTransform.WorldTransform = enemyCollision.CollisionEntity.WorldTransform;
+        // Vector3 newVelocity = Accelerate(direction, speed);
+        // enemyCollision.CollisionEntity.LinearVelocity = new Vector3(newVelocity.X, enemyCollision.CollisionEntity.LinearVelocity.Y, newVelocity.Z);
+        // enemyTransform.WorldTransform = enemyCollision.CollisionEntity.WorldTransform;
+        // enemyTransform.Orientation = Rotate(enemyTransform, direction);
     }
     
     private void RandomWalk(GameTime gameTime)
@@ -118,11 +113,11 @@ public class BasicEnemyBehaviorTree
         Vector3 randomDirection = new Vector3(Utils.GetRandomFloatInRange(-1f, 1f), 0f, Utils.GetRandomFloatInRange(-1f, 1f));
         randomDirection.Normalize();
         
-        enemyTransform.WorldTransform = enemyCollision.CollisionEntity.WorldTransform;
-        Vector3 newVelocity = Accelerate(randomDirection, speed);
-        enemyCollision.CollisionEntity.LinearVelocity = new Vector3(newVelocity.X, enemyCollision.CollisionEntity.LinearVelocity.Y, newVelocity.Z);
-        enemyTransform.WorldTransform = enemyCollision.CollisionEntity.WorldTransform;
-        enemyTransform.Orientation = Rotate(enemyTransform, randomDirection);
+        // enemyTransform.WorldTransform = enemyCollision.CollisionEntity.WorldTransform;
+        // Vector3 newVelocity = Accelerate(randomDirection, speed);
+        // enemyCollision.CollisionEntity.LinearVelocity = new Vector3(newVelocity.X, enemyCollision.CollisionEntity.LinearVelocity.Y, newVelocity.Z);
+        // enemyTransform.WorldTransform = enemyCollision.CollisionEntity.WorldTransform;
+        // enemyTransform.Orientation = Rotate(enemyTransform, randomDirection);
     }
     
     

@@ -3,13 +3,12 @@
 public enum EArchetype {
     StaticMesh = 0, // PostionComponent, RotationComponent, MeshComponent
     DynamicMesh = 1, // StaticMesh, VelocityComponent 
-    Player = 2, // DynamicMesh ,  AnimationComponent, InputComponent
-    Enemy = 3, // DynamicMesh,  AnimationComponent, AIComponent
-    Projectile = 4, // DynamicMesh 
-    Light = 5,  // PositionComponent, LightComponent, RotationComponent
-    Particle = 6, //
-    Trigger = 7,
-    Weapon = 9,
-    Spawner = 10
-    Player = 8 // TransformComponent, InputComponent
+    Enemy = 2, // DynamicMesh,  AnimationComponent, AIComponent
+    Projectile = 3, // DynamicMesh 
+    Light = 4,  // PositionComponent, LightComponent, RotationComponent
+    Particle = 5, //
+    Trigger = 6,
+    Player = 7, // TransformComponent, InputComponent
+    Weapon = 8,
+    Spawner = 9
 } 

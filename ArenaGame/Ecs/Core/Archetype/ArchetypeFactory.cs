@@ -35,6 +35,7 @@ public class ArchetypeFactory
             case EArchetype.Player:
                 return new PlayerArchetype(new[]
                 {
+                    
                     ComponentManager.Instance.GetComponentArray(typeof(InputComponent)).GetComponentType(),
                     ComponentManager.Instance.GetComponentArray(typeof(TransformComponent)).GetComponentType(), // Can't define MeshComponent here since it can't have empty constructor
                 });

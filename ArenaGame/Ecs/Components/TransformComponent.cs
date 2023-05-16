@@ -13,6 +13,7 @@ public class TransformComponent : IComponent
     public Vector3 Scale { get; set; } = new Vector3(1,1,1);
     
     internal Vector3 position;
+    internal Vector3 rotation;
     internal Quaternion orientation = Quaternion.Identity;
     internal Matrix3x3 orientationMatrix = Matrix3x3.Identity;
     internal Matrix3x3 inertiaTensorInverse;
@@ -42,6 +43,17 @@ public class TransformComponent : IComponent
         Matrix3x3.Multiply(ref result, ref this.orientationMatrix, out this.inertiaTensor);
       }
     }
+
+    public Vector3 Rotation
+    {
+      get => this.rotation;
+      set
+      {
+        Matrix matrix = Matrix.CreateFromQuaternion(this.orientation);
+        rotation = matrix.Translation;
+      }
+    }
+    
     public Matrix3x3 OrientationMatrix
     {
       get => this.orientationMatrix;
