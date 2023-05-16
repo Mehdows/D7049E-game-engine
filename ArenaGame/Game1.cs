@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace ArenaGame;
@@ -22,10 +21,8 @@ public class Game1 : Game
     private List<SoundEffect> _soundEffects;
 
     // 2D
-    //private SpriteBatch spriteBatch;
-    //private Entity player; 
-    
-    private PlayerControllerSystem playerControllerSystem;
+    private SpriteBatch spriteBatch;
+    private SpriteFont spriteFont;
 
     // 3D rendering
     private Entity player3D;
@@ -36,6 +33,10 @@ public class Game1 : Game
     private InputSystem inputSystem;
     private WeaponSystem weaponSystem;
     private SpawnerSystem spawnerSystem;
+
+    // Diagnostics variables
+    private int framesPerSecond;
+    private double memoryUsage; // Approximation of the total amount of memory currently allocated by the .NET garbage collector (GC) for managed objects (should be a couple of MB)
 
     public Game1()
     {
@@ -54,11 +55,6 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-        // 2D
-        /*PlayerArchetype playerArchetype = ArchetypeFactory.GetArchetype(EArchetype.Player) as PlayerArchetype;
-        player = entityManager.CreateEntityWithArchetype(playerArchetype);
-        playerControllerSystem = new PlayerControllerSystem();*/
-
         // 3D
         Player3DArchetype player3DArchetype = ArchetypeFactory.GetArchetype(EArchetype.Player3D) as Player3DArchetype;
         player3D = entityManager.CreateEntityWithArchetype(player3DArchetype);
@@ -82,9 +78,8 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         // 2D
-        //Texture2D playerTexture = Content.Load<Texture2D>("Sprites/player");
-        //player.AddComponent<SpriteComponent>(new SpriteComponent(playerTexture));
-        //spriteBatch = new SpriteBatch(GraphicsDevice);
+        spriteBatch = new SpriteBatch(GraphicsDevice);
+        spriteFont = Content.Load<SpriteFont>("Fonts/Arial");
 
         // 3D
         Model model = Content.Load<Model>("Models/player_character");
@@ -104,8 +99,9 @@ public class Game1 : Game
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // 2D
-        //playerControllerSystem.Update(gameTime);
+        // Diagnostics
+        framesPerSecond = (int)Math.Round(1f / gameTime.ElapsedGameTime.TotalSeconds);
+        memoryUsage = GC.GetTotalMemory(false) / 1048576.0; // Convert from Bytes to MB
 
         // 3D
         inputSystem.Update(gameTime);
@@ -120,13 +116,10 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         // 2D
-        /*
         spriteBatch.Begin();
-        spriteBatch.Draw(
-            ((SpriteComponent)player.GetComponent<SpriteComponent>()).Texture,
-            ((PositionComponent)player.GetComponent<PositionComponent>()).Position, Color.White);
+        spriteBatch.DrawString(spriteFont, "FPS: " + framesPerSecond, new Vector2(10f, 10f), Color.White);
+        spriteBatch.DrawString(spriteFont, "Memory Usage: " + memoryUsage.ToString("0.00") + " MB", new Vector2(10f, 30f), Color.White);
         spriteBatch.End();
-        */
 
         // 3D
         renderingSystem.Draw();
