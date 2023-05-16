@@ -2,45 +2,54 @@
 using ArenaGame.Ecs.Archetypes;
 using ArenaGame.Ecs.Components;
 using Microsoft.Xna.Framework;
+using Matrix = BEPUutilities.Matrix;
+using Vector3 = BEPUutilities.Vector3;
+using Quaternion = BEPUutilities.Quaternion;
 
 namespace ArenaGame.Ecs.Systems
 {
     public class WeaponSystem : ISystem
     {
-        private float offset = 15f;
-        private float speed = 2f;
+        private CollisionComponent playerCollision;
 
-        private TransformComponent playerTransform;
+        private WeaponComponent sword;
         private TransformComponent swordTransform;
+        private CollisionComponent swordCollision;
+        private MeshComponent swordMesh;
 
         public WeaponSystem()
         {
-            Player3DArchetype player3DArchetype = (Player3DArchetype)ArchetypeFactory.GetArchetype(EArchetype.Player3D);
-            Entity player3D = EntityManager.Instance.GetEntitiesWithArchetype(player3DArchetype)[0]; // 0 is always the player...
-            playerTransform = (TransformComponent)player3D.GetComponent<TransformComponent>();
-
-            WeaponArchetype weaponArchetype = (WeaponArchetype)ArchetypeFactory.GetArchetype(EArchetype.Weapon);
-            Entity sword = EntityManager.Instance.GetEntitiesWithArchetype(weaponArchetype)[1]; // ... and 1 is always the weapon???
-            swordTransform = (TransformComponent)sword.GetComponent<TransformComponent>();
+            var playerID = ComponentManager.Instance.GetComponentArray(typeof(InputComponent)).GetEntityComponents()[0].Item1;
+            playerCollision = (CollisionComponent) EntityManager.Instance.GetEntity(playerID).GetComponent<CollisionComponent>();
+            
+            sword = (WeaponComponent) EntityManager.Instance.GetEntity(playerID).GetComponent<WeaponComponent>();
+            swordTransform =(TransformComponent) sword.WeaponEntity.GetComponent<TransformComponent>();
+            swordCollision =(CollisionComponent) sword.WeaponEntity.GetComponent<CollisionComponent>();
+            swordMesh =(MeshComponent) sword.WeaponEntity.GetComponent<MeshComponent>();
         }
 
         public void Update(GameTime gameTime)
         {
-            // Rotate sword in the player's direction
-            swordTransform.Position = playerTransform.Position + Vector3.Transform(new Vector3(0f, offset, -30f), playerTransform.Rotation);
-            swordTransform.Rotation = playerTransform.Rotation;
-
+            
+            float swordOffset = -10f;
             float time = (float)gameTime.TotalGameTime.TotalSeconds;
 
-            // Adds sword movement from side to side
-            /*
-            Vector3 right = Vector3.Transform(Vector3.Right, swordTransform.Rotation);
-            float sideOffset = offset * (float)Math.Sin(time * speed);
-            swordTransform.Position += right * sideOffset;
-            */
+            float angle = sword.Speed * time;
 
-            // Rotate sword around it's own axis
-            swordTransform.Rotation *= Quaternion.CreateFromYawPitchRoll(speed * time, 0f, 0f);
+            float xPos = playerCollision.CollisionEntity.Position.X + (float)Math.Cos(angle) * sword.Radius;
+            float zPos = playerCollision.CollisionEntity.Position.Z + (float)Math.Sin(angle) * sword.Radius;
+            Vector3 newPosition = new Vector3(xPos, playerCollision.CollisionEntity.Position.Y, zPos);
+
+            Vector3 bottomCenterOffset = new Vector3(0f, 0, 5f);
+            Vector3 adjustedPosition = newPosition - bottomCenterOffset;
+            Vector3 forward = -Vector3.Normalize(playerCollision.CollisionEntity.Position - newPosition);
+            Matrix rotationMatrix = Matrix.CreateWorldRH(newPosition, forward, Vector3.Up);
+            Quaternion orientation = Quaternion.CreateFromRotationMatrix(rotationMatrix);
+
+            swordCollision.CollisionEntity.Position = adjustedPosition;
+            swordCollision.CollisionEntity.Orientation = orientation;
+            swordTransform.WorldTransform = swordCollision.CollisionEntity.WorldTransform;
+            swordMesh.localOffset = new Vector3((float)Math.Cos(angle) * swordOffset, 0, (float)Math.Sin(angle) * swordOffset);
         }
     }
 }

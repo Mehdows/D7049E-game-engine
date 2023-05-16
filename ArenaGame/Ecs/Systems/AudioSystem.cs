@@ -20,8 +20,8 @@ public class AudioSystem : ISystem
 
     public void Initialize()
     {
-        Player3DArchetype player3DArchetype = (Player3DArchetype)ArchetypeFactory.GetArchetype(EArchetype.Player3D);
-        Entity player = EntityManager.Instance.GetEntitiesWithArchetype(player3DArchetype)[0];
+        PlayerArchetype playerArchetype = (PlayerArchetype)ArchetypeFactory.GetArchetype(EArchetype.Player3D);
+        Entity player = EntityManager.Instance.GetEntitiesWithArchetype(playerArchetype)[0];
         AudioComponent audio = (AudioComponent)player.GetComponent<AudioComponent>();
 
         if (audio == null)

@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using ArenaGame.Ecs.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 public class InputComponent : IComponent
 {
+    
     private readonly Dictionary<InputKey, bool> _keyStates;
     private readonly Dictionary<InputKey, bool> _previousKeyStates;
 
-    public InputComponent()
+    public InputComponent() 
     {
+        
         _keyStates = new Dictionary<InputKey, bool>();
         _previousKeyStates = new Dictionary<InputKey, bool>();
 
@@ -22,8 +23,8 @@ public class InputComponent : IComponent
             _previousKeyStates[key] = false;
         }
     }
-
-    public  void Update(GameTime gameTime)
+    
+    public override void Update(GameTime gameTime)
     {
         // Copy current state to previous state
         foreach (InputKey key in _keyStates.Keys)
@@ -50,6 +51,7 @@ public class InputComponent : IComponent
     {
         return _keyStates[key];
     }
+
 }
 
 public enum InputKey

@@ -32,6 +32,15 @@ public class EntityManager {
         entities.Add(entityId, entity);
         return entity;
     }
+
+    public Entity AddEntity(Entity entity)
+    {
+        int entityId = nextEntityId++;
+        entity.Id = entityId;
+        entities.Add(entityId, entity);
+        return entity;
+    }
+    
     
     public Entity CreateEntityWithArchetype(Archetype archetype) {
         Entity entity = CreateEntity();
