@@ -19,11 +19,10 @@ namespace ArenaGame.Ecs.Systems
         private AISystem aiSystem;
         private EntityBuilder builder;
         private Model model;
-        private float elapsedTime = 0f;
-        
+
         private static Random random = new Random();
-        private const float MinSpawnInterval = 5f;
-        private const float MaxSpawnInterval = 15f;
+        private const float MinSpawnInterval = 3f;
+        private const float MaxSpawnInterval = 10f;
         private float timeUntilNextSpawn = GetRandomSpawnInterval();
 
 
@@ -34,87 +33,48 @@ namespace ArenaGame.Ecs.Systems
             this.gameSpace = gameSpace;
             this.model = model;
             this.aiSystem = aiSystem;
-
-            // TODO: Want to spawn every 10 seconds but it doesn't work since we can't load content in Update and don't know how to save model for reuse
-            builder = new EntityBuilder()
-                .AddTransformComponent()
-                .AddMeshComponent(this.model, new Vector3(0, -3.5f, 0))
-                .AddCollisionComponent(spawnPositionTopLeft, new CapsuleShape(10f, 5f), new BEPUutilities.Vector3(20, 50, 20), "Enemy", -15f)
-                .AddAIControllerComponent(EnemyType.Basic);
-            this.aiSystem.AddEnemy(builder.Build());
-
-            builder = new EntityBuilder()
-                .AddTransformComponent()
-                .AddMeshComponent(this.model, new BEPUutilities.Vector3(0, -3.5f, 0))
-                .AddCollisionComponent(spawnPositionTopRight, new CapsuleShape(10f, 5f), new BEPUutilities.Vector3(20, 50, 20), "Enemy", -15f)
-                .AddAIControllerComponent(EnemyType.Basic);
-            this.aiSystem.AddEnemy(builder.Build());
-
-            builder = new EntityBuilder()
-                .AddTransformComponent()
-                .AddMeshComponent(this.model, new BEPUutilities.Vector3(0, -3.5f, 0))
-                .AddCollisionComponent(spawnPositionBottomLeft, new CapsuleShape(10f, 5f), new BEPUutilities.Vector3(20, 50, 20), "Enemy", -15f)
-                .AddAIControllerComponent(EnemyType.Basic);
-            this.aiSystem.AddEnemy(builder.Build());
-
-            builder = new EntityBuilder()
-                .AddTransformComponent()
-                .AddMeshComponent(this.model, new BEPUutilities.Vector3(0, -3.5f, 0))
-                .AddCollisionComponent(spawnPositionBottomRight, new CapsuleShape(10f, 5f), new BEPUutilities.Vector3(20, 50, 20), "Enemy", -15f)
-                .AddAIControllerComponent(EnemyType.Basic);
-            this.aiSystem.AddEnemy(builder.Build());
         }
 
         public void Update(GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            elapsedTime += deltaTime;
 
             timeUntilNextSpawn -= deltaTime;
             if (timeUntilNextSpawn <= 0f)
             {
+                int randNext = random.Next(1, 4);
+                Vector3 spawnPosition;
+
+                switch (randNext)
+                {
+                    case 1:
+                        spawnPosition = spawnPositionTopLeft;
+                        break;
+                    case 2:
+                        spawnPosition = spawnPositionTopRight;
+                        break;
+                    case 3:
+                        spawnPosition = spawnPositionBottomLeft;
+                        break;
+                    case 4:
+                        spawnPosition = spawnPositionBottomRight;
+                        break;
+                    default:
+                        spawnPosition = spawnPositionTopLeft;
+                        break;
+                }
+
                 // Spawn the AI entity
                 builder = new EntityBuilder()
                     .AddTransformComponent()
-                    .AddMeshComponent(this.model, new Vector3(0, -3.5f, 0))
-                    .AddCollisionComponent(spawnPositionBottomRight, new CapsuleShape(10f, 5f), new Vector3(20, 50, 20), "Enemy", -15f)
+                    .AddMeshComponent(model, new Vector3(0, -3.5f, 0))
+                    .AddCollisionComponent(spawnPosition, new CapsuleShape(10f, 5f), new Vector3(20, 50, 20), "Enemy", -15f)
                     .AddAIControllerComponent(EnemyType.Basic);
                 var newEnemy = builder.Build();
-                this.aiSystem.AddEnemy(newEnemy);
+                aiSystem.AddEnemy(newEnemy);
                 // Dont forget to add to space for the collision -> movement to work
                 gameSpace.Add(((CollisionComponent)newEnemy.GetComponent<CollisionComponent>()).CollisionEntity);
                 
-                
-                builder = new EntityBuilder()
-                    .AddTransformComponent()
-                    .AddMeshComponent(this.model, new Vector3(0, -3.5f, 0))
-                    .AddCollisionComponent(spawnPositionBottomLeft, new CapsuleShape(10f, 5f), new Vector3(20, 50, 20), "Enemy", -15f)
-                    .AddAIControllerComponent(EnemyType.Basic);
-                newEnemy = builder.Build();
-                this.aiSystem.AddEnemy(newEnemy);
-                gameSpace.Add(((CollisionComponent)newEnemy.GetComponent<CollisionComponent>()).CollisionEntity);
-                
-                builder = new EntityBuilder()
-                    .AddTransformComponent()
-                    .AddMeshComponent(this.model, new Vector3(0, -3.5f, 0))
-                    .AddCollisionComponent(spawnPositionTopLeft, new CapsuleShape(10f, 5f), new Vector3(20, 50, 20), "Enemy", -15f)
-                    .AddAIControllerComponent(EnemyType.Basic);
-                newEnemy = builder.Build();
-                this.aiSystem.AddEnemy(newEnemy);
-                gameSpace.Add(((CollisionComponent)newEnemy.GetComponent<CollisionComponent>()).CollisionEntity);
-                
-                
-                builder = new EntityBuilder()
-                    .AddTransformComponent()
-                    .AddMeshComponent(this.model, new Vector3(0, -3.5f, 0))
-                    .AddCollisionComponent(spawnPositionTopRight, new CapsuleShape(10f, 5f), new Vector3(20, 50, 20), "Enemy", -15f)
-                    .AddAIControllerComponent(EnemyType.Basic);
-                newEnemy = builder.Build();
-                this.aiSystem.AddEnemy(newEnemy);
-                
-                 
-                
-                gameSpace.Add(((CollisionComponent)newEnemy.GetComponent<CollisionComponent>()).CollisionEntity);
 
                 // Reset the time until the next spawn
                 timeUntilNextSpawn = GetRandomSpawnInterval();
