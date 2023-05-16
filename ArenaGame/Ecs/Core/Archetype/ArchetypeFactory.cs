@@ -43,13 +43,6 @@ public class ArchetypeFactory
                 {
                     ComponentManager.Instance.GetComponentArray(typeof(TransformComponent)).GetComponentType()
                 });
-            case EArchetype.Spawner:
-                return new SpawnerArchetype(new[]
-                {
-                    ComponentManager.Instance.GetComponentArray(typeof(TransformComponent)).GetComponentType(),
-                    ComponentManager.Instance.GetComponentArray(typeof(SpawnerComponent)).GetComponentType()
-                });
-
 
             default:
                 throw new ArgumentException("Invalid archetype type.");

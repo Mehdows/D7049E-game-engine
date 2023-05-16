@@ -10,6 +10,5 @@ public enum EArchetype {
     Particle = 6, //
     Trigger = 7,
     Player3D = 8, // TransformComponent, InputComponent
-    Weapon = 9,
-    Spawner = 10
+    Weapon = 9
 } 
