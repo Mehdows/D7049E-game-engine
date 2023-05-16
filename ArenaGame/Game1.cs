@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Color = Microsoft.Xna.Framework.Color;
 using Matrix = BEPUutilities.Matrix;
 using Quaternion = BEPUutilities.Quaternion;
 using Vector3 = BEPUutilities.Vector3;
@@ -36,7 +37,9 @@ public class Game1 : Game
     
     private List<SoundEffect> _soundEffects;
 
-    
+    // 2D
+    private SpriteBatch spriteBatch;
+    private SpriteFont spriteFont;
     private PlayerControllerSystem playerControllerSystem;
 
     // 3D rendering
@@ -60,6 +63,10 @@ public class Game1 : Game
     internal Space GameSpace { get; set; }
     private BEPUphysics.Entities.Entity entity;
 
+    // Diagnostics variables
+    private int framesPerSecond;
+    private double memoryUsage; // Approximation of the total amount of memory currently allocated by the .NET garbage collector (GC) for managed objects (should be a couple of MB)
+
     public Game1()
     {
         graphics = new GraphicsDeviceManager(this);
@@ -79,8 +86,8 @@ public class Game1 : Game
     {
         GameSpace = new Space();
         GameSpace.ForceUpdater.Gravity = new Vector3(0, -9.81f, 0);
-        // 3D
         
+        // 3D
         EntityBuilder builder = new EntityBuilder()
             .AddTransformComponent()
             .AddMeshComponent("Models/sword", new Vector3(0,0,0))
@@ -127,7 +134,11 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
+        // 2D
+        spriteBatch = new SpriteBatch(GraphicsDevice);
+        spriteFont = Content.Load<SpriteFont>("Fonts/Arial");
         
+        // 3D
         CubeModel = Content.Load<Model>("Models/cube");
         // Call the load content for each MeshComponent in the component manager
         foreach (var (_, component) in ComponentManager.Instance.GetComponentArray(typeof(MeshComponent)).GetEntityComponents())
@@ -154,7 +165,6 @@ public class Game1 : Game
             }
             Components.Add(new EntityModel(collisionComponent.CollisionEntity, CubeModel, scaling, this));
         }
-        
 
         // Physics
         Box ground = new Box(Vector3.Zero, 500, 1, 500);
@@ -192,6 +202,10 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
         
+        // Diagnostics
+        framesPerSecond = (int)Math.Round(1f / gameTime.ElapsedGameTime.TotalSeconds);
+        memoryUsage = GC.GetTotalMemory(false) / 1048576.0; // Convert from Bytes to MB
+        
         // Update the Space object in your game's update loop
         GameSpace.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
         base.Update(gameTime);
@@ -200,7 +214,14 @@ public class Game1 : Game
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
-
+        
+        // 2D
+        spriteBatch.Begin();
+        spriteBatch.DrawString(spriteFont, "FPS: " + framesPerSecond, new Vector2(10f, 10f), Color.White);
+        spriteBatch.DrawString(spriteFont, "Memory Usage: " + memoryUsage.ToString("0.00") + " MB", new Vector2(10f, 30f), Color.White);
+        spriteBatch.End();
+        
+        // 3D
         renderingSystem.Draw(gameTime);
 
         base.Draw(gameTime);
