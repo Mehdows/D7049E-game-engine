@@ -23,9 +23,7 @@ public class Game1 : Game
     public static Game1 Instance => instance;
 
     private GraphicsDeviceManager graphics;
-    private EntityManager entityManager;
-    private ComponentManager componentManager;
-    
+
     private List<SoundEffect> _soundEffects;
 
     // 2D
@@ -63,10 +61,6 @@ public class Game1 : Game
         
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-
-        // Create entity and component managers
-        entityManager = EntityManager.Instance;
-        componentManager = ComponentManager.Instance;
     }
 
     protected override void Initialize()
@@ -89,12 +83,13 @@ public class Game1 : Game
             .AddInputComponent();
         player = builder.Build();
 
-        builder = new EntityBuilder()
+        // Creates enemy in SpawnerSystem instead
+        /*builder = new EntityBuilder()
             .AddTransformComponent()
             .AddMeshComponent("Models/enemy_character", new Vector3(0,-3.5f, 0))
             .AddCollisionComponent(new Vector3(10, 30, 0), new CapsuleShape(10f, 5f), new Vector3(20, 50, 20), "Enemy", -15f)
             .AddAIControllerComponent(EnemyType.Basic);
-        enemy = builder.Build();
+        enemy = builder.Build();*/
 
         // Create a new camera and add the PerspectiveCameraComponent to it with a transform
         builder = new EntityBuilder()
@@ -113,7 +108,7 @@ public class Game1 : Game
         physicsSystem = new PhysicsSystem(GameSpace, this);
         aiSystem = new AISystem();
         weaponSystem = new WeaponSystem();
-        // spawnerSystem = new SpawnerSystem();
+        spawnerSystem = new SpawnerSystem(aiSystem);
         
         // Physics
         base.Initialize();
@@ -187,7 +182,7 @@ public class Game1 : Game
         }
         inputSystem.Update(gameTime);
         weaponSystem.Update(gameTime);
-        // spawnerSystem.Update(gameTime);
+        spawnerSystem.Update(gameTime);
         // Allows the game to exit
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();

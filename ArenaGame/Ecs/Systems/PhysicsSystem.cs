@@ -40,7 +40,7 @@ public class PhysicsSystem: ISystem
                 {
                
                     // Console.WriteLine($"{otherEntity.Entity}");
-                    Console.WriteLine($"ENEMY HIT");
+                    // Console.WriteLine($"ENEMY HIT");
                 
                 }
                 
