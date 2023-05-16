@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Color = Microsoft.Xna.Framework.Color;
+using System.Diagnostics;
 
 namespace ArenaGame;
 
@@ -19,7 +20,7 @@ public class Game1 : Game
     private EntityManager entityManager;
     private ComponentManager componentManager;
     
-    private List<SoundEffect> _soundEffects;
+    //private List<SoundEffect> _soundEffects;
 
     // 2D
     //private SpriteBatch spriteBatch;
@@ -33,6 +34,8 @@ public class Game1 : Game
     
     private RenderingSystem renderingSystem;
     private InputSystem inputSystem;
+
+    private AudioSystem audioSystem;
 
     public Game1()
     {
@@ -68,6 +71,8 @@ public class Game1 : Game
 
         inputSystem = new InputSystem(graphics);
 
+        audioSystem = new AudioSystem();
+
         base.Initialize();
     }
 
@@ -84,6 +89,8 @@ public class Game1 : Game
 
         Model environment = Content.Load<Model>("Models/environment");
 
+        Song song = Content.Load<Song>("Audio/stranger-things");
+        player3D.AddComponent<AudioComponent>(new AudioComponent(song));
     }
 
     protected override void Update(GameTime gameTime)
@@ -98,6 +105,8 @@ public class Game1 : Game
 
         // 3D
         inputSystem.Update(gameTime);
+
+        audioSystem.Update(gameTime);
 
         base.Update(gameTime);
     }

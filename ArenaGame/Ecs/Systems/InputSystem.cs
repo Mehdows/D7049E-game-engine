@@ -1,6 +1,7 @@
 ﻿using ArenaGame.Ecs.Archetypes;
 using ArenaGame.Ecs.Components;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Media;
 
 namespace ArenaGame.Ecs.Systems;
 
@@ -20,6 +21,7 @@ public class InputSystem: ISystem
         Entity player3D = EntityManager.Instance.GetEntitiesWithArchetype(player3DArchetype)[0];
         TransformComponent transform = (TransformComponent)player3D.GetComponent<TransformComponent>();
         InputComponent input = (InputComponent)player3D.GetComponent<InputComponent>();
+
 
         input.Update(gameTime);
 
@@ -48,5 +50,25 @@ public class InputSystem: ISystem
         {
             graphicsDeviceManager.ToggleFullScreen();
         }
+
+        /*
+        if (input.IsKeyPressed(InputKey.increase_volume))
+        {
+            volume = volume + 0.01f;
+            MediaPlayer.Volume = volume;
+        }
+
+        if (input.IsKeyPressed(InputKey.decrease_volume))
+        {
+            volume = volume - 0.01f;
+            MediaPlayer.Volume = volume;
+        }
+
+        if (input.IsKeyPressed(InputKey.mute))
+        {
+        isMuted = !isMuted;
+        MediaPlayer.IsMuted = isMuted;
+        }
+        */
     }
 }

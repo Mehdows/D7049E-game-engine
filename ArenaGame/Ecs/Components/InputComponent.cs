@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using ArenaGame.Ecs.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -60,4 +61,8 @@ public enum InputKey
     Jump = Keys.Space,
     Attack = Keys.Enter,
     FullScreen = Keys.F11
+
+    //Mute = Keys.M
+    //Increase_volume = Keys.+
+    //Decrease_volume = Keys.-
 }
