@@ -10,6 +10,7 @@ using Vector3 = BEPUutilities.Vector3;
 
 namespace ArenaGame.Ecs.Components;
 
+// TODO: Remove?
 // TODO: Ha en StaticMeshComponent som inte behöver en dynamisk kropp (massa)
 public class StaticMeshComponent : IComponent
 {
