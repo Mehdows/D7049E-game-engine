@@ -17,6 +17,12 @@ public class MeshComponent : IComponent
         this.modelPath = modelPath;
         this.localOffset = localOffset;
     }
+    
+    public MeshComponent(Model model, Vector3 localOffset) 
+    {
+        Model = model;
+        this.localOffset = localOffset;
+    }
     public MeshComponent(String modelPath) 
     {
         this.modelPath = modelPath;
@@ -25,7 +31,10 @@ public class MeshComponent : IComponent
 
     public new void LoadContent(ContentManager contentManager)
     {
-        Model = contentManager.Load<Model>(modelPath);
+        if (Model == null)
+        {
+            Model = contentManager.Load<Model>(modelPath);
+        }
         
     }
 }

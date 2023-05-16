@@ -5,6 +5,7 @@ using ArenaGame.Ecs;
 using ArenaGame.Ecs.Components;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUutilities;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ArenaGame;
 
@@ -33,6 +34,13 @@ public class EntityBuilder
     
     public EntityBuilder AddMeshComponent(string meshName, Vector3 localOffset) {
         MeshComponent meshComponent = new MeshComponent(meshName, localOffset);
+        entity.AddComponent(meshComponent);
+        componentTypes.Add(typeof(MeshComponent));
+        return this;
+    }
+    
+    public EntityBuilder AddMeshComponent(Model model, Vector3 localOffset) {
+        MeshComponent meshComponent = new MeshComponent(model, localOffset);
         entity.AddComponent(meshComponent);
         componentTypes.Add(typeof(MeshComponent));
         return this;

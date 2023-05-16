@@ -83,14 +83,6 @@ public class Game1 : Game
             .AddInputComponent();
         player = builder.Build();
 
-        // Creates enemy in SpawnerSystem instead
-        /*builder = new EntityBuilder()
-            .AddTransformComponent()
-            .AddMeshComponent("Models/enemy_character", new Vector3(0,-3.5f, 0))
-            .AddCollisionComponent(new Vector3(10, 30, 0), new CapsuleShape(10f, 5f), new Vector3(20, 50, 20), "Enemy", -15f)
-            .AddAIControllerComponent(EnemyType.Basic);
-        enemy = builder.Build();*/
-
         // Create a new camera and add the PerspectiveCameraComponent to it with a transform
         builder = new EntityBuilder()
             .AddTransformComponent(0f, 400f, -100f)
@@ -108,7 +100,6 @@ public class Game1 : Game
         physicsSystem = new PhysicsSystem(GameSpace, this);
         aiSystem = new AISystem();
         weaponSystem = new WeaponSystem();
-        spawnerSystem = new SpawnerSystem(aiSystem);
         
         // Physics
         base.Initialize();
@@ -119,6 +110,8 @@ public class Game1 : Game
         // 2D
         spriteBatch = new SpriteBatch(GraphicsDevice);
         spriteFont = Content.Load<SpriteFont>("Fonts/Arial");
+        Model enemyModel = Content.Load<Model>("Models/enemy_character");
+        spawnerSystem = new SpawnerSystem(GameSpace, aiSystem, enemyModel);
         
         // 3D
         CubeModel = Content.Load<Model>("Models/cube");
@@ -190,6 +183,7 @@ public class Game1 : Game
         // Diagnostics
         framesPerSecond = (int)Math.Round(1f / gameTime.ElapsedGameTime.TotalSeconds);
         memoryUsage = GC.GetTotalMemory(false) / 1048576.0; // Convert from Bytes to MB
+        
         
         // Update the Space object in your game's update loop
         GameSpace.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
