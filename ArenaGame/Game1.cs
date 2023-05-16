@@ -1,23 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using ArenaGame.Ecs;
-using ArenaGame.Ecs.Archetypes;
 using ArenaGame.Ecs.Components;
 using ArenaGame.Ecs.Systems;
 using BEPUphysics;
-using BEPUphysics.BroadPhaseEntries;
-using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUphysics.Entities.Prefabs;
-using BEPUphysics.NarrowPhaseSystems.Pairs;
-using BEPUutilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Color = Microsoft.Xna.Framework.Color;
 using Matrix = BEPUutilities.Matrix;
-using Quaternion = BEPUutilities.Quaternion;
 using Vector3 = BEPUutilities.Vector3;
 
 namespace ArenaGame;
@@ -26,10 +20,7 @@ public class Game1 : Game
 {
     private static Game1 instance;
 
-    public static Game1 Instance
-    {
-        get { return instance; }
-    }
+    public static Game1 Instance => instance;
 
     private GraphicsDeviceManager graphics;
     private EntityManager entityManager;
@@ -40,7 +31,6 @@ public class Game1 : Game
     // 2D
     private SpriteBatch spriteBatch;
     private SpriteFont spriteFont;
-    private PlayerControllerSystem playerControllerSystem;
 
     // 3D rendering
     private Entity player;
@@ -48,7 +38,6 @@ public class Game1 : Game
     private Entity sword;
     private Entity camera;
     
-    private TransformComponent playerTransform;
     
     private RenderingSystem renderingSystem;
     private InputSystem inputSystem;
@@ -58,10 +47,8 @@ public class Game1 : Game
     private WeaponSystem weaponSystem;
     private SpawnerSystem spawnerSystem;
     
-    private Model model;
     public Model CubeModel;
     internal Space GameSpace { get; set; }
-    private BEPUphysics.Entities.Entity entity;
 
     // Diagnostics variables
     private int framesPerSecond;
@@ -90,7 +77,7 @@ public class Game1 : Game
         // 3D
         EntityBuilder builder = new EntityBuilder()
             .AddTransformComponent()
-            .AddMeshComponent("Models/sword", new Vector3(0,0,0))
+            .AddMeshComponent("Models/Sword/Sword", new Vector3(0,0,0))
             .AddCollisionComponent(new Vector3(30, 30, 0), new BoxShape(3, 2, 20), new Vector3(5, 5, 50), "Weapon", 0);
         sword = builder.Build();
         

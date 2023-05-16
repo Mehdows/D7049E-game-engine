@@ -40,7 +40,7 @@ namespace ArenaGame.Ecs.Systems
             float zPos = playerCollision.CollisionEntity.Position.Z + (float)Math.Sin(angle) * sword.Radius;
             Vector3 newPosition = new Vector3(xPos, playerCollision.CollisionEntity.Position.Y, zPos);
 
-            Vector3 bottomCenterOffset = new Vector3(0f, 0, 5f);
+            Vector3 bottomCenterOffset = new Vector3(0f, -1f, 0f);
             Vector3 adjustedPosition = newPosition - bottomCenterOffset;
             Vector3 forward = -Vector3.Normalize(playerCollision.CollisionEntity.Position - newPosition);
             Matrix rotationMatrix = Matrix.CreateWorldRH(newPosition, forward, Vector3.Up);
