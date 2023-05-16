@@ -16,7 +16,7 @@ We have created an [API outline](https://github.com/Mehdows/D7049E-game-engine/b
 
 There are a number of different approaches to handle the mapping, and some are more efficient than others. A simple approach that's efficient for large data, but less efficient for querying components based on specific criteria, is to store each component type in a separate array where each element in the array corresponds to an entity. Another approach is to use archetype-based storage which is when entities are grouped into archetypes based on their component types. This is used in Unity for efficient querying in large-scale games. You could also for example use [sparse sets](https://www.geeksforgeeks.org/sparse-set/). The exact implementation will be decided at a later stage, but we will probably go for a simpler approach initially.
 
-As shown in the diagram, the datastructure which we have chosen to just call ComponentArray for now, contains all components that are attached to entities. The dotted arrows between entities and components show examples of some entity instances that are mapped to some components. Note that some of the components and systems that we have defined may not be needed, and we may also need to add additional parts in the future.
+As shown in the diagram, the datastructure which we have chosen to just call ComponentArray for now, contains all components that are attached to entities. The dotted arrows between entities and components show examples of some entity instances that are mapped to some components. Note that some of the components and systems that we have defined may not be needed, and we may also need to add additional parts in the future. The figure shows the first draft of our ECS design, and the latest version is provided in the group report.
 
 ![ECS-Diagram-Engine](./img/ECS-Diagram-Engine.png)
 
@@ -37,6 +37,6 @@ The game idea has been presented in Milestone 1, so here we just provide an ER d
 
 Entities contained in two rectangles are known as weak entites as they can't be uniquely identified by their attributes alone, and instead depend on an owner entity. In our case we have for example enemy instances where the defining owner is the enemy entity.
 
-Note that the diagram may have to change as the development progresses.
+Note that parts in the diagram may have to change as the development progresses.
 
 ![ER-Diagram-Game](./img/ER-Diagram-Game.png)
