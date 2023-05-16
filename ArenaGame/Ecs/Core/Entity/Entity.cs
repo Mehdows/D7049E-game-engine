@@ -1,25 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using IComponent = ArenaGame.Ecs.Components.IComponent;
+using ArenaGame.Ecs;
+using ArenaGame.Ecs.Components;
 
-namespace ArenaGame.Ecs;
+namespace ArenaGame;
 
 public class Entity
 {
-    public int Id { get; }
+    public int Id { get; set; }
     
-    public Entity(int id )
+    public Entity(int id = -1)
     {
         Id = id;
     }
 
-    public void AddComponent<T>(IComponent component = null) where T: IComponent, new()
+    public IComponent AddComponent(IComponent component = null) 
     {
-        var newComponent = component ?? new T();
-        Type componentType = typeof(T);
-        ComponentManager.Instance.GetComponentArray(componentType)
+        var newComponent = component;
+        Type componentType = newComponent.GetType();
+        var createdComponent = ComponentManager.Instance.GetComponentArray(componentType)
             .AddComponent(Id, newComponent);
+        return createdComponent;
     }
         
     public void RemoveComponent<T>() where T: IComponent
