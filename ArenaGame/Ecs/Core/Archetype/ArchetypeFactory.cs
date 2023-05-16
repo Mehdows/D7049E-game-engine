@@ -38,6 +38,17 @@ public class ArchetypeFactory
                     ComponentManager.Instance.GetComponentArray(typeof(InputComponent)).GetComponentType(),
                     ComponentManager.Instance.GetComponentArray(typeof(TransformComponent)).GetComponentType(), // Can't define MeshComponent here since it can't have empty constructor
                 });
+            case EArchetype.Weapon:
+                return new WeaponArchetype(new[]
+                {
+                    ComponentManager.Instance.GetComponentArray(typeof(TransformComponent)).GetComponentType()
+                });
+            case EArchetype.Spawner:
+                return new SpawnerArchetype(new[]
+                {
+                    ComponentManager.Instance.GetComponentArray(typeof(TransformComponent)).GetComponentType(),
+                    ComponentManager.Instance.GetComponentArray(typeof(SpawnerComponent)).GetComponentType()
+                });
 
 
             default:

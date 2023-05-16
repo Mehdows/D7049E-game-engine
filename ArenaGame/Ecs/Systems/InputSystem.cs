@@ -17,6 +17,13 @@ public class InputSystem: ISystem
 
     private Vector3 movementDirection;
     
+    private GraphicsDeviceManager graphicsDeviceManager;
+
+    public InputSystem(GraphicsDeviceManager graphicsDeviceManager)
+    {
+        this.graphicsDeviceManager = graphicsDeviceManager;
+    }
+
     public void Update(GameTime gameTime)
     {
         PlayerArchetype playerArchetype = (PlayerArchetype)ArchetypeFactory.GetArchetype(EArchetype.Player);
@@ -75,6 +82,11 @@ public class InputSystem: ISystem
         else
         {
             movementDirection = Vector3.Zero;
+        }
+        
+        if (input.IsKeyPressed(InputKey.FullScreen))
+        {
+            graphicsDeviceManager.ToggleFullScreen();
         }
         
         // If no keys are pressed, stop the player
@@ -136,4 +148,5 @@ public class InputSystem: ISystem
         // Convert the angle to a quaternion and set the player's rotation
         return Quaternion.CreateFromAxisAngle(transform.Up, MathHelper.ToRadians(angle));
     }
+
 }

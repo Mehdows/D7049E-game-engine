@@ -46,11 +46,15 @@ public class Game1 : Game
     private Entity player;
     private Entity enemy;
     private TransformComponent playerTransform;
+    private Entity sword;
+    private CameraComponent cameraComponent;
     
     private Entity camera;
     // private RenderingSystem renderingSystem;
     private RenderingSystem2 renderingSystem;
     private InputSystem inputSystem;
+    private WeaponSystem weaponSystem;
+    private SpawnerSystem spawnerSystem;
     private PhysicsSystem physicsSystem;
     private FollowCameraSystem followCameraSystem;
     private AISystem aiSystem;
@@ -65,13 +69,13 @@ public class Game1 : Game
     public Game1()
     {
         graphics = new GraphicsDeviceManager(this);
-        graphics.PreferredBackBufferWidth = 1920;
-        graphics.PreferredBackBufferHeight = 1080;
+        graphics.PreferredBackBufferWidth = (int)Math.Round(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width * 0.8f, 0);
+        graphics.PreferredBackBufferHeight = (int)Math.Round(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height * 0.8f, 0);
         graphics.ApplyChanges();
         
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-
+        
         // Create entity and component managers
         entityManager = EntityManager.Instance;
         componentManager = ComponentManager.Instance;
@@ -96,6 +100,9 @@ public class Game1 : Game
             .AddAIControllerComponent(EnemyType.Basic);
         enemy = builder.Build();
         
+        WeaponArchetype weaponArchetype = ArchetypeFactory.GetArchetype(EArchetype.Weapon) as WeaponArchetype;
+        sword = entityManager.CreateEntityWithArchetype(weaponArchetype);
+
 
         // Create a new camera and add the PerspectiveCameraComponent to it with a transform
         builder = new EntityBuilder()
@@ -114,7 +121,10 @@ public class Game1 : Game
         physicsSystem = new PhysicsSystem(GameSpace, this);
         aiSystem = new AISystem();
         
-        // Physics
+        // inputSystem = new InputSystem(graphics);
+        weaponSystem = new WeaponSystem();
+        spawnerSystem = new SpawnerSystem();
+
         base.Initialize();
     }
 
@@ -231,6 +241,15 @@ public class Game1 : Game
         //     //Remove the graphics too.
         //     Components.Remove((EntityModel)otherEntityInformation.Entity.Tag);
         // }
+        // 3D
+        Model model = Content.Load<Model>("Models/player_character");
+        player3D.AddComponent<MeshComponent>(new MeshComponent(model));
+
+        Model swordMesh = Content.Load<Model>("Models/sword");
+        sword.AddComponent<MeshComponent>(new MeshComponent(swordMesh));
+
+        Model environment = Content.Load<Model>("Models/environment");
+
     }
 
     protected override void Update(GameTime gameTime)
@@ -243,6 +262,9 @@ public class Game1 : Game
             followCameraSystem.Update(gameTime);
         }
         inputSystem.Update(gameTime);
+        weaponSystem.Update(gameTime);
+        spawnerSystem.Update(gameTime);
+
         // Allows the game to exit
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
@@ -266,7 +288,7 @@ public class Game1 : Game
         */
 
         // 3D
-        renderingSystem.Draw(gameTime);
+        renderingSystem.Draw();
 
         base.Draw(gameTime);
     }
