@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ArenaGame.Ecs;
 using ArenaGame.Ecs.Archetypes;
 using ArenaGame.Ecs.Components;
@@ -7,7 +8,6 @@ using BEPUphysics;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.CollisionShapes.ConvexShapes;
-using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using BEPUphysics.NarrowPhaseSystems.Pairs;
 using BEPUutilities;
@@ -33,7 +33,14 @@ public class Game1 : Game
     private GraphicsDeviceManager graphics;
     private EntityManager entityManager;
     private ComponentManager componentManager;
+    
     private List<SoundEffect> _soundEffects;
+
+    // 2D
+    //private SpriteBatch spriteBatch;
+    //private Entity player; 
+    
+    private PlayerControllerSystem playerControllerSystem;
 
     // 3D rendering
     private Entity player;
@@ -46,6 +53,7 @@ public class Game1 : Game
     private InputSystem inputSystem;
     private PhysicsSystem physicsSystem;
     private FollowCameraSystem followCameraSystem;
+    private AISystem aiSystem;
     private Model model;
 
     // Physics
@@ -60,6 +68,7 @@ public class Game1 : Game
         graphics.PreferredBackBufferWidth = 1920;
         graphics.PreferredBackBufferHeight = 1080;
         graphics.ApplyChanges();
+        
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
@@ -81,8 +90,10 @@ public class Game1 : Game
         player = builder.Build();
 
         builder = new EntityBuilder()
-            .AddTransformComponent(0, 0, 0)
-            .AddMeshComponent("Models/FreeMale");
+            .AddTransformComponent()
+            .AddMeshComponent("Models/FreeMale")
+            .AddCollisionComponent(new Vector3(10, 30, 0), new CapsuleShape(10f, 5f), new Vector3(30, 60, 30), "Enemy")
+            .AddAIControllerComponent(EnemyType.Basic);
         enemy = builder.Build();
         
 
@@ -96,10 +107,12 @@ public class Game1 : Game
         ((PerspectiveCameraComponent)camera.GetComponent<PerspectiveCameraComponent>())
             .LookAt((TransformComponent)player.GetComponent<TransformComponent>());
         
+        
         renderingSystem = new RenderingSystem2(camera);
         inputSystem = new InputSystem();
         followCameraSystem = new FollowCameraSystem(player, camera);
         physicsSystem = new PhysicsSystem(GameSpace, this);
+        aiSystem = new AISystem();
         
         // Physics
         base.Initialize();
@@ -144,15 +157,15 @@ public class Game1 : Game
         Box ground = new Box(Vector3.Zero, 500, 1, 500);
         GameSpace.Add(ground);
         
-        Box Enemy1 = new Box(new Vector3(0, 10, 0), 5, 5, 5, 1);
-        Box Enemy2 = new Box(new Vector3(0, 15, 0), 5, 5, 5, 1);
-        Box Enemy3 = new Box(new Vector3(0, 20, 0), 5, 5, 5, 1);
-        GameSpace.Add(Enemy1);
-        GameSpace.Add(Enemy2);
-        GameSpace.Add(Enemy3);
-        Enemy1.Tag = "Enemy";
-        Enemy2.Tag = "Enemy";
-        Enemy3.Tag = "Enemy";
+        // Box Enemy1 = new Box(new Vector3(0, 10, 0), 5, 5, 5, 1);
+        // Box Enemy2 = new Box(new Vector3(0, 15, 0), 5, 5, 5, 1);
+        // Box Enemy3 = new Box(new Vector3(0, 20, 0), 5, 5, 5, 1);
+        // GameSpace.Add(Enemy1);
+        // GameSpace.Add(Enemy2);
+        // GameSpace.Add(Enemy3);
+        // Enemy1.Tag = "Enemy";
+        // Enemy2.Tag = "Enemy";
+        // Enemy3.Tag = "Enemy";
         
         // //Now that we have something to fall on, make a few more boxes.
         // //These need to be dynamic, so give them a mass- in this case, 1 will be fine.
@@ -210,19 +223,20 @@ public class Game1 : Game
         //This type of event can occur when an entity hits any other object which can be collided with.
         //They aren't always entities; for example, hitting a StaticMesh would trigger this.
         //Entities use EntityCollidables as collision proxies; see if the thing we hit is one.
-        var otherEntityInformation = other as EntityCollidable;
-        if (otherEntityInformation != null)
-        {
-            //We hit an entity! remove it.
-            GameSpace.Remove(otherEntityInformation.Entity);
-            //Remove the graphics too.
-            Components.Remove((EntityModel)otherEntityInformation.Entity.Tag);
-        }
+        // var otherEntityInformation = other as EntityCollidable;
+        // if (otherEntityInformation != null)
+        // {
+        //     //We hit an entity! remove it.
+        //     GameSpace.Remove(otherEntityInformation.Entity);
+        //     //Remove the graphics too.
+        //     Components.Remove((EntityModel)otherEntityInformation.Entity.Tag);
+        // }
     }
 
     protected override void Update(GameTime gameTime)
     {
         physicsSystem.Update(gameTime);
+        aiSystem.Update(gameTime);
         
         if (followCameraSystem != null)
         {
@@ -241,8 +255,19 @@ public class Game1 : Game
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
+
+        // 2D
+        /*
+        spriteBatch.Begin();
+        spriteBatch.Draw(
+            ((SpriteComponent)player.GetComponent<SpriteComponent>()).Texture,
+            ((PositionComponent)player.GetComponent<PositionComponent>()).Position, Color.White);
+        spriteBatch.End();
+        */
+
         // 3D
         renderingSystem.Draw(gameTime);
+
         base.Draw(gameTime);
     }
 }

@@ -58,6 +58,13 @@ public class EntityBuilder
         componentTypes.Add(typeof(PerspectiveCameraComponent));
         return this;
     }
+    
+    public EntityBuilder AddAIControllerComponent(EnemyType enemyType) {
+        AIControllerComponent aiControllerComponent = new AIControllerComponent(enemyType);
+        entity.AddComponent(aiControllerComponent);
+        componentTypes.Add(typeof(AIControllerComponent));
+        return this;
+    }
 
     public EntityBuilder AddComponents(IEnumerable<IComponent> components) {
         foreach (var component in components) {
