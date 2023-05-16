@@ -8,6 +8,7 @@ using Matrix = BEPUutilities.Matrix;
 
 namespace ArenaGame;
 
+    // TODO: Remove?
     /// <summary>
     /// Component that draws a model.
     /// </summary>
