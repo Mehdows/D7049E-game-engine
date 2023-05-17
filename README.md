@@ -5,4 +5,4 @@ Milestones are provided in the "Milestones" folder.
 
 The engine is made using ECS and features support for 3D physics, 3D models, cameras, etc.
 
-![](img/physics-showcase.gif)
+![](img/game-demo.gif)
