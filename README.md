@@ -3,6 +3,6 @@ In the course D7049E (Virtual interactive environments) at Lule� University of
 
 Milestones are provided in the "Milestones" folder.
 
-The engine is made using ECS and features support for 3D physics, 3D models, cameras, etc.
+The engine is made using ECS and features support for 3D physics, 3D models, AI Behaviour trees, cameras, etc.
 
 ![](img/game-demo.gif)
