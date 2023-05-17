@@ -25,17 +25,25 @@ namespace ArenaGame.Ecs.Systems
         private const float MaxSpawnInterval = 10f;
         private float timeUntilNextSpawn = GetRandomSpawnInterval();
 
+        private bool benchmarkMode;
+        private float spawnTime = 0f;
+        private float totalElapsedTime = 0f;
 
-
-
-        public SpawnerSystem(Space gameSpace, AISystem aiSystem, Model model)
+        public SpawnerSystem(Space gameSpace, AISystem aiSystem, Model model, bool benchmarkMode)
         {
             this.gameSpace = gameSpace;
             this.model = model;
             this.aiSystem = aiSystem;
+            this.benchmarkMode = benchmarkMode;
         }
 
         public void Update(GameTime gameTime)
+        {
+            if (benchmarkMode) { Benchmark(gameTime);}
+            else { SpawnEnemies(gameTime); }
+        }
+
+        private void SpawnEnemies(GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -43,26 +51,7 @@ namespace ArenaGame.Ecs.Systems
             if (timeUntilNextSpawn <= 0f)
             {
                 int randNext = random.Next(1, 4);
-                Vector3 spawnPosition;
-
-                switch (randNext)
-                {
-                    case 1:
-                        spawnPosition = spawnPositionTopLeft;
-                        break;
-                    case 2:
-                        spawnPosition = spawnPositionTopRight;
-                        break;
-                    case 3:
-                        spawnPosition = spawnPositionBottomLeft;
-                        break;
-                    case 4:
-                        spawnPosition = spawnPositionBottomRight;
-                        break;
-                    default:
-                        spawnPosition = spawnPositionTopLeft;
-                        break;
-                }
+                Vector3 spawnPosition = GetNextSpawnPosition(randNext);
 
                 // Spawn the AI entity
                 builder = new EntityBuilder()
@@ -74,11 +63,65 @@ namespace ArenaGame.Ecs.Systems
                 aiSystem.AddEnemy(newEnemy);
                 // Dont forget to add to space for the collision -> movement to work
                 gameSpace.Add(((CollisionComponent)newEnemy.GetComponent<CollisionComponent>()).CollisionEntity);
-                
 
                 // Reset the time until the next spawn
                 timeUntilNextSpawn = GetRandomSpawnInterval();
             }
+        }
+
+        private void Benchmark(GameTime gameTime)
+        {
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            spawnTime += deltaTime;
+            totalElapsedTime += deltaTime;
+
+            if (totalElapsedTime >= 30f)
+            {
+                Game1.Instance.ExitGame();
+            }
+
+            if (spawnTime >= 0.2f)
+            {
+                for (int i = 1; i <= 4; i++)
+                {
+                    Vector3 spawnPosition = GetNextSpawnPosition(i);
+
+                    builder = new EntityBuilder()
+                        .AddTransformComponent()
+                        .AddMeshComponent(model, new Vector3(0, -3.5f, 0))
+                        .AddCollisionComponent(spawnPosition, new CapsuleShape(10f, 5f), new Vector3(20, 50, 20), "Enemy", -15f)
+                        .AddAIControllerComponent(EnemyType.Basic);
+                    var newEnemy = builder.Build();
+                    aiSystem.AddEnemy(newEnemy);
+                    gameSpace.Add(((CollisionComponent)newEnemy.GetComponent<CollisionComponent>()).CollisionEntity);
+                }
+
+                spawnTime = 0f;
+            }
+        }
+
+        private Vector3 GetNextSpawnPosition(int index)
+        {
+            Vector3 spawnPosition;
+            switch (index)
+            {
+                case 1:
+                    spawnPosition = spawnPositionTopLeft;
+                    break;
+                case 2:
+                    spawnPosition = spawnPositionTopRight;
+                    break;
+                case 3:
+                    spawnPosition = spawnPositionBottomLeft;
+                    break;
+                case 4:
+                    spawnPosition = spawnPositionBottomRight;
+                    break;
+                default:
+                    spawnPosition = spawnPositionTopLeft;
+                    break;
+            }
+            return spawnPosition;
         }
 
         private static float GetRandomSpawnInterval()

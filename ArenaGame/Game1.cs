@@ -24,6 +24,9 @@ public class Game1 : Game
 
     private GraphicsDeviceManager graphics;
 
+    // BENCHMARK VARIABLE
+    private bool benchmarkMode = false;
+
     private List<SoundEffect> _soundEffects;
 
     // 2D
@@ -49,7 +52,10 @@ public class Game1 : Game
     internal Space GameSpace { get; set; }
 
     // Diagnostics variables
-    private int framesPerSecond;
+    //private int framesPerSecond;
+    private int frameCount;
+    private double elapsedTime;
+    private double fps;
     private double memoryUsage; // Approximation of the total amount of memory currently allocated by the .NET garbage collector (GC) for managed objects (should be a couple of MB)
 
     public Game1()
@@ -61,6 +67,8 @@ public class Game1 : Game
         
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+
+        instance = this;
     }
 
     protected override void Initialize()
@@ -111,7 +119,7 @@ public class Game1 : Game
         spriteBatch = new SpriteBatch(GraphicsDevice);
         spriteFont = Content.Load<SpriteFont>("Fonts/Arial");
         Model enemyModel = Content.Load<Model>("Models/enemy_character");
-        spawnerSystem = new SpawnerSystem(GameSpace, aiSystem, enemyModel);
+        spawnerSystem = new SpawnerSystem(GameSpace, aiSystem, enemyModel, benchmarkMode);
         
         // 3D
         CubeModel = Content.Load<Model>("Models/cube");
@@ -179,9 +187,23 @@ public class Game1 : Game
         // Allows the game to exit
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
-        
-        // Diagnostics
-        framesPerSecond = (int)Math.Round(1f / gameTime.ElapsedGameTime.TotalSeconds);
+
+        // Calculate elapsed time and FPS
+        //framesPerSecond = (int)Math.Round(1f / gameTime.ElapsedGameTime.TotalSeconds);
+        double deltaTime = gameTime.ElapsedGameTime.TotalSeconds;
+        elapsedTime += deltaTime;
+        frameCount++;
+
+        if (elapsedTime >= 1.0)
+        {
+            fps = (int)Math.Round(frameCount / elapsedTime);
+
+            // Reset counters
+            frameCount = 0;
+            elapsedTime = 0.0;
+        }
+
+        // Memory usage
         memoryUsage = GC.GetTotalMemory(false) / 1048576.0; // Convert from Bytes to MB
         
         
@@ -202,13 +224,18 @@ public class Game1 : Game
 
         // 2D
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone);
-        spriteBatch.DrawString(spriteFont, "FPS: " + framesPerSecond, new Microsoft.Xna.Framework.Vector2(10f, 10f), Color.White);
-        spriteBatch.DrawString(spriteFont, "Memory Usage: " + memoryUsage.ToString("0.00") + " MB", new Microsoft.Xna.Framework.Vector2(10f, 30f), Color.White);
+        spriteBatch.DrawString(spriteFont, "FPS: " + fps, new Vector2(10f, 10f), Color.Black);
+        spriteBatch.DrawString(spriteFont, "Memory Usage: " + memoryUsage.ToString("0.00") + " MB", new Vector2(10f, 30f), Color.Black);
         spriteBatch.End();
 
         // Re-enable depth buffering
         GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
         base.Draw(gameTime);
+    }
+
+    public void ExitGame()
+    {
+        Exit();
     }
 }
