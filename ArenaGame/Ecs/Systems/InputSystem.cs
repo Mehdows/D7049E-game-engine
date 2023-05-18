@@ -33,6 +33,8 @@ public class InputSystem: ISystem
         var collision = (CollisionComponent)player3D.GetComponent<CollisionComponent>();
 
         input.Update(gameTime);
+
+        if (transform.Position.Y < -500f) { Game1.Instance.ExitGame(); }
         
         // Reset the movement direction
         movementDirection = Vector3.Zero;

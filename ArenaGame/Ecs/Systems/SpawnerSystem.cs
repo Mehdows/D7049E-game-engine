@@ -10,6 +10,7 @@ namespace ArenaGame.Ecs.Systems
 {
     public class SpawnerSystem : ISystem
     {
+
         private Vector3 spawnPositionTopLeft = new(250f, 30f, 250f);
         private Vector3 spawnPositionTopRight = new(-250f, 30f, 250f);
         private Vector3 spawnPositionBottomLeft = new(250f, 30f, -250f);

@@ -4,6 +4,7 @@ using BEPUphysics;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.NarrowPhaseSystems.Pairs;
+using BEPUutilities;
 using Microsoft.Xna.Framework;
 
 namespace ArenaGame.Ecs.Systems;
@@ -38,10 +39,13 @@ public class PhysicsSystem: ISystem
                 // Console.WriteLine($"{sender.Entity}");
                 if (otherEntity.Entity.Tag is string tag && tag == "Enemy")
                 {
-               
-                    // Console.WriteLine($"{otherEntity.Entity}");
+
+                    //Console.WriteLine($"{otherEntity.Entity}");
                     // Console.WriteLine($"ENEMY HIT");
-                
+                    //Console.WriteLine();
+                    BEPUutilities.Vector3 dir = otherEntity.Entity.Position - sender.Entity.Position;
+                    dir.Normalize();
+                    otherEntity.Entity.LinearVelocity = new BEPUutilities.Vector3(dir.X * 1000f, 100f, dir.Z * 1000f);
                 }
                 
             }

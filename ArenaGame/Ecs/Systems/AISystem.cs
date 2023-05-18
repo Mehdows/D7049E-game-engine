@@ -11,6 +11,8 @@ namespace ArenaGame.Ecs.Systems;
 
 public class AISystem: ISystem
 {
+    public Action<Entity> OnEnemyKilled { get; set; }
+
     private List<Entity> enemyEntities = new List<Entity>();
     private Entity player;
 
@@ -47,9 +49,18 @@ public class AISystem: ISystem
     
     public void Update(GameTime gameTime)
     {
+        List<Entity> deadEnemies = new List<Entity>();
         foreach (var enemy in enemyEntities)
         {
             AIControllerComponent aiControllerComponent =(AIControllerComponent) enemy.GetComponent<AIControllerComponent>();
+            TransformComponent transform = (TransformComponent) enemy.GetComponent<TransformComponent>();
+
+            // Remove enemies if they fall outside map
+            if (transform.position.Y < 0f)
+            {
+                deadEnemies.Add(enemy);
+                continue;
+            }
 
             if (aiControllerComponent != null)
             {
@@ -57,6 +68,12 @@ public class AISystem: ISystem
                 aiControllerComponent.BehaviorTree.Update(gameTime);
             }
             
+        }
+
+        foreach (var enemy in deadEnemies)
+        {
+            enemyEntities.Remove(enemy);
+            OnEnemyKilled?.Invoke(enemy);
         }
     }
 

@@ -29,6 +29,9 @@ public class Game1 : Game
 
     private List<SoundEffect> _soundEffects;
 
+    // Score
+    private int score = 0;
+
     // 2D
     private SpriteBatch spriteBatch;
     private SpriteFont spriteFont;
@@ -108,6 +111,11 @@ public class Game1 : Game
         physicsSystem = new PhysicsSystem(GameSpace, this);
         aiSystem = new AISystem();
         weaponSystem = new WeaponSystem();
+
+        aiSystem.OnEnemyKilled += (entity) => { 
+            score++;
+            // EntityManager.Instance.DestroyEntity(entity.Id); 
+        };
         
         // Physics
         base.Initialize();
@@ -224,8 +232,10 @@ public class Game1 : Game
 
         // 2D
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone);
-        spriteBatch.DrawString(spriteFont, "FPS: " + fps, new Vector2(10f, 10f), Color.Black);
-        spriteBatch.DrawString(spriteFont, "Memory Usage: " + memoryUsage.ToString("0.00") + " MB", new Vector2(10f, 30f), Color.Black);
+        spriteBatch.DrawString(spriteFont, "Score: " + score, new Vector2(10f, 10f), Color.White);
+        spriteBatch.DrawString(spriteFont, "FPS: " + fps, new Vector2(10f, 60f), Color.White);
+        spriteBatch.DrawString(spriteFont, "Memory Usage: " + memoryUsage.ToString("0.00") + " MB", new Vector2(10f, 80f), Color.White);
+        
         spriteBatch.End();
 
         // Re-enable depth buffering
